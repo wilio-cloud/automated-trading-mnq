@@ -22,6 +22,7 @@ class LondonZonesStrategy:
         self.current_trading_date: Optional[datetime.date] = None
         self.briefing_sent: bool = False
         self.orders_placed: bool = False
+        self.amber_cleaned: bool = False
         self.eod_cleaned: bool = False
         
         # Estat diari
@@ -36,6 +37,7 @@ class LondonZonesStrategy:
         self.current_trading_date = today
         self.briefing_sent = False
         self.orders_placed = False
+        self.amber_cleaned = False
         self.eod_cleaned = False
         self.active_symbol = None
         self.london_high = None
@@ -90,28 +92,34 @@ class LondonZonesStrategy:
             notifier.send("ERROR DE ZONES", err, color="danger")
             return
 
-        # 5. Càlcul de preus de l'estratègia (TP 10 pts, SL 60 pts)
+        # 5. Càlcul de preus de l'estratègia (TP Dinàmic segons cota NQ, SL Invariant 60 pts)
+        # Regla quantitativa validada: NQ < 21.000 pts -> TP 8 pts; NQ >= 21.000 pts -> TP 10 pts
+        dynamic_tp = 8.0 if self.london_high < 21000.0 else config.tp_points
+        dynamic_sl = config.sl_points
+
         # Zona Alta: Sell Limit @ High
         short_entry = self.london_high
-        short_tp = round(short_entry - config.tp_points, 2)
-        short_sl = round(short_entry + config.sl_points, 2)
+        short_tp = round(short_entry - dynamic_tp, 2)
+        short_sl = round(short_entry + dynamic_sl, 2)
 
         # Zona Baixa: Buy Limit @ Low
         long_entry = self.london_low
-        long_tp = round(long_entry + config.tp_points, 2)
-        long_sl = round(long_entry - config.sl_points, 2)
+        long_tp = round(long_entry + dynamic_tp, 2)
+        long_sl = round(long_entry - dynamic_sl, 2)
 
         # 6. Col·locació d'ordres OSO a Tradovate
+        regime_str = "< 21.000 pts (TP 8 pts)" if self.london_high < 21000.0 else "≥ 21.000 pts (TP 10 pts)"
         notifier.send(
             "🇬🇧 ZONES DE LONDRES CALCULADES",
             f"**Data**: {today}\n"
-            f"**Contracte**: `{self.active_symbol}`\n\n"
+            f"**Contracte**: `{self.active_symbol}`\n"
+            f"**Règim NQ**: `{regime_str}`\n\n"
             f"🔴 **SHORT (London High)**: `{short_entry:.2f}`\n"
-            f"   • Take Profit: `{short_tp:.2f}` (+{config.tp_points:.1f} pts)\n"
-            f"   • Stop Loss:   `{short_sl:.2f}` (-{config.sl_points:.1f} pts)\n\n"
+            f"   • Take Profit: `{short_tp:.2f}` (+{dynamic_tp:.1f} pts)\n"
+            f"   • Stop Loss:   `{short_sl:.2f}` (-{dynamic_sl:.1f} pts)\n\n"
             f"🟢 **LONG (London Low)**: `{long_entry:.2f}`\n"
-            f"   • Take Profit: `{long_tp:.2f}` (+{config.tp_points:.1f} pts)\n"
-            f"   • Stop Loss:   `{long_sl:.2f}` (-{config.sl_points:.1f} pts)\n\n"
+            f"   • Take Profit: `{long_tp:.2f}` (+{dynamic_tp:.1f} pts)\n"
+            f"   • Stop Loss:   `{long_sl:.2f}` (-{dynamic_sl:.1f} pts)\n\n"
             f"🎯 _Ordres límit col·locades. Gestió activa de la sessió._",
             color="info"
         )
@@ -188,7 +196,7 @@ class LondonZonesStrategy:
         minute = now.minute
 
         # 0. Briefing Matinal a Discord a les 10:00 CEST (dilluns a divendres)
-        now_madrid = datetime.datetime.now(self.tz_madrid)
+        now_madrid = now.astimezone(self.tz_madrid) if now else datetime.datetime.now(self.tz_madrid)
         if now_madrid.date().weekday() < 5:
             if now_madrid.hour == 10 and not self.briefing_sent:
                 generate_and_send_briefing(now_madrid.date())
@@ -196,6 +204,7 @@ class LondonZonesStrategy:
 
         macro = get_macro_event_for_date(today)
         is_fomc = macro and macro.get("type") == "FOMC"
+        is_amber = macro and macro.get("severity") == "AMBER"
 
         # 1. Moment de col·locació d'ordres (a partir de les 05:00 EDT / 11:00 CEST)
         is_after_london = (hour > config.london_end_hour) or (hour == config.london_end_hour and minute >= config.london_end_minute)
@@ -205,15 +214,27 @@ class LondonZonesStrategy:
             if not self.orders_placed:
                 self.on_london_close(now)
 
-        # 2. Tancament anticipat per a dies de FOMC (18:00 CEST)
-        macro = get_macro_event_for_date(today)
-        if macro and macro.get("type") == "FOMC":
-            if now_madrid.hour >= 18:
-                if not self.eod_cleaned:
-                    logger.info("⏰ Tancament anticipat de seguretat FOMC a les 18:00 CEST...")
-                    self.on_eod_close(now)
+        # 2. Cancel·lació de protecció en dies AMBER (CPI / NFP) a les 14:20 CEST si no s'ha omplert l'ordre
+        if is_amber and (now_madrid.hour > 14 or (now_madrid.hour == 14 and now_madrid.minute >= 20)):
+            if self.orders_placed and not self.amber_cleaned:
+                logger.info("⚠️ Notícia AMBER detectada: Cancel·lant ordres límit pendents abans de les 14:30...")
+                tradovate_client.cancel_all_pending_orders()
+                notifier.send(
+                    "⚠️ CANCEL·LACIÓ PRE-NOTÍCIA (14:20 CEST)",
+                    f"**Esdeveniment**: {macro.get('name')}\n"
+                    f"• Ordres límit no tocades retirades abans de la publicació de dades (14:30).\n"
+                    f"• Prevenció de fuetades de liquiditat i slippage violent.",
+                    color="warning"
+                )
+                self.amber_cleaned = True
 
-        # 3. Tancament EOD estàndard CME (16:55 EDT)
+        # 3. Tancament anticipat per a dies de FOMC (18:00 CEST)
+        if is_fomc and now_madrid.hour >= 18:
+            if not self.eod_cleaned:
+                logger.info("⏰ Tancament anticipat de seguretat FOMC a les 18:00 CEST...")
+                self.on_eod_close(now)
+
+        # 4. Tancament EOD estàndard CME (16:55 EDT)
         if hour == config.eod_close_hour and minute >= config.eod_close_minute:
             if not self.eod_cleaned:
                 self.on_eod_close(now)
