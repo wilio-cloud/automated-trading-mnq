@@ -10,13 +10,17 @@ from bot.contract_resolver import resolve_active_contract
 from bot.zone_calculator import zone_calculator
 from bot.risk_manager import risk_manager
 from bot.notifier import notifier
+from bot.daily_briefing import generate_and_send_briefing
+from bot.macro_calendar import get_macro_event_for_date
 
 logger = logging.getLogger("Strategy")
 
 class LondonZonesStrategy:
     def __init__(self):
         self.tz = pytz.timezone(config.timezone)
+        self.tz_madrid = pytz.timezone("Europe/Madrid")
         self.current_trading_date: Optional[datetime.date] = None
+        self.briefing_sent: bool = False
         self.orders_placed: bool = False
         self.eod_cleaned: bool = False
         
@@ -30,6 +34,7 @@ class LondonZonesStrategy:
     def reset_for_new_day(self, today: datetime.date):
         """Reinicia l'estat per a una nova jornada operativa."""
         self.current_trading_date = today
+        self.briefing_sent = False
         self.orders_placed = False
         self.eod_cleaned = False
         self.active_symbol = None
@@ -183,6 +188,14 @@ class LondonZonesStrategy:
 
         hour = now.hour
         minute = now.minute
+
+        # 0. Briefing Matinal a Discord a les 10:00 CEST (dilluns a divendres)
+        now_madrid = datetime.datetime.now(self.tz_madrid)
+        if now_madrid.date().weekday() < 5:
+            if now_madrid.hour == 10 and now_madrid.minute == 0:
+                if not self.briefing_sent:
+                    generate_and_send_briefing(now_madrid.date())
+                    self.briefing_sent = True
 
         # 1. Moment de col·locació d'ordres (05:00 EDT)
         if hour == config.london_end_hour and minute == config.london_end_minute:

@@ -82,8 +82,12 @@ case "$1" in
         echo "📊 Iniciant el Dashboard Interactiu a http://localhost:8000 ..."
         $PYTHON_CMD -m uvicorn dashboard.app:app --host 0.0.0.0 --port 8000 --reload
         ;;
+    briefing)
+        echo "📢 Enviant el Briefing Matinal a Discord..."
+        $PYTHON_CMD -m bot.daily_briefing
+        ;;
     *)
-        echo "Ús: $0 {check|start|run|stop|status|logs|dashboard|test-trigger}"
+        echo "Ús: $0 {check|start|run|stop|status|logs|dashboard|briefing|test-trigger}"
         exit 1
         ;;
 esac
