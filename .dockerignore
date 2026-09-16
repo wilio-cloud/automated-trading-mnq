@@ -1,0 +1,9 @@
+.git
+.gitignore
+.env
+*.log
+*.pid
+__pycache__
+data/
+results/
+tests/

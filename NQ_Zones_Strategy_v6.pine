@@ -1,0 +1,156 @@
+// This Pine Script® code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Quantitative Research - NQ Zones Reversal Strategy v6
+//@version=6
+strategy("NQ Zones Reversal Strategy [Sweet Spot]", shorttitle="NQ Zones Strat", overlay=true, 
+         initial_capital=25000, default_qty_type=strategy.fixed, default_qty_value=1, 
+         commission_type=strategy.commission.cash_per_contract, commission_value=2.05,
+         max_boxes_count=500, max_lines_count=500, max_labels_count=500)
+
+// ============================================
+// INPUTS & RISK:REWARD CONFIGURATION
+// ============================================
+grp_rr = "Risk : Reward (Sweet Spot Settings)"
+tpPoints = input.float(10.0, "Take Profit (points)", minval=1.0, step=0.5, group=grp_rr, tooltip="Punts de Take Profit. Recomanat Sweet Spot: 8 a 12 punts.")
+slPoints = input.float(60.0, "Stop Loss (points)", minval=5.0, step=1.0, group=grp_rr, tooltip="Punts de Stop Loss. Recomanat Sweet Spot: 50 a 60 punts.")
+
+grp_sessions = "Sessions & Zones Selection"
+tradeAsia = input.bool(true, "Trade Asia Zones (High & Low)", group=grp_sessions)
+tradeLondon = input.bool(true, "Trade London Zones (High & Low)", group=grp_sessions)
+
+grp_time = "Horaris (Fixed GMT-4)"
+ASIA_SESSION = input.session("2000-0000", "Sessió Asia", group=grp_time)
+LONDON_SESSION = input.session("0200-0500", "Sessió London", group=grp_time)
+TIMEZONE = "GMT-4"
+
+// ============================================
+// DETECCIÓ DE SESSIONS
+// ============================================
+bool inAsia = not na(time(timeframe.period, ASIA_SESSION, TIMEZONE))
+bool inLondon = not na(time(timeframe.period, LONDON_SESSION, TIMEZONE))
+
+// Tancament de mercat (16:55 GMT-4)
+int currentHour = hour(time, TIMEZONE)
+int currentMin = minute(time, TIMEZONE)
+bool isEOD = (currentHour == 16 and currentMin >= 55) or (currentHour >= 17)
+
+var bool asiaWasActive = false
+var bool londonWasActive = false
+
+var float asiaH = na
+var float asiaL = na
+var float asiaH_prev = na
+var float asiaL_prev = na
+var bool asiaTradedH = false
+var bool asiaTradedL = false
+
+var float londonH = na
+var float londonL = na
+var float londonH_prev = na
+var float londonL_prev = na
+var bool londonTradedH = false
+var bool londonTradedL = false
+
+// --- Tracking Asia ---
+bool asiaStart = inAsia and not asiaWasActive
+bool asiaEnd = not inAsia and asiaWasActive
+
+if asiaStart
+    asiaH := high
+    asiaL := low
+    asiaTradedH := false
+    asiaTradedL := false
+
+if inAsia
+    asiaH := math.max(asiaH, high)
+    asiaL := math.min(asiaL, low)
+
+if asiaEnd
+    asiaH_prev := asiaH
+    asiaL_prev := asiaL
+    asiaTradedH := false
+    asiaTradedL := false
+
+asiaWasActive := inAsia
+
+// --- Tracking London ---
+bool londonStart = inLondon and not londonWasActive
+bool londonEnd = not inLondon and londonWasActive
+
+if londonStart
+    londonH := high
+    londonL := low
+    londonTradedH := false
+    londonTradedL := false
+
+if inLondon
+    londonH := math.max(londonH, high)
+    londonL := math.min(londonL, low)
+
+if londonEnd
+    londonH_prev := londonH
+    londonL_prev := londonL
+    londonTradedH := false
+    londonTradedL := false
+
+londonWasActive := inLondon
+
+// ============================================
+// EXECUCIÓ D'ORDRES (LIMIT REVERSAL)
+// ============================================
+// Finestra operativa: Des de 00:00 fins a 16:55 GMT-4
+bool tradingWindow = not isEOD and (currentHour < 17)
+
+// 1. Ordres Asia (actives des de 00:00 fins a 16:55)
+if tradeAsia and tradingWindow and not na(asiaH_prev) and not na(asiaL_prev)
+    // Asia High (SHORT)
+    if not asiaTradedH
+        if high >= asiaH_prev
+            strategy.entry("Asia_H_Short", strategy.short, limit=asiaH_prev)
+            strategy.exit("TP/SL Asia H", "Asia_H_Short", 
+                          limit=asiaH_prev - tpPoints, 
+                          stop=asiaH_prev + slPoints)
+            asiaTradedH := true
+
+    // Asia Low (LONG)
+    if not asiaTradedL
+        if low <= asiaL_prev
+            strategy.entry("Asia_L_Long", strategy.long, limit=asiaL_prev)
+            strategy.exit("TP/SL Asia L", "Asia_L_Long", 
+                          limit=asiaL_prev + tpPoints, 
+                          stop=asiaL_prev - slPoints)
+            asiaTradedL := true
+
+// 2. Ordres London (actives des de 05:00 fins a 16:55)
+bool postLondonWindow = tradingWindow and (currentHour >= 5)
+
+if tradeLondon and postLondonWindow and not na(londonH_prev) and not na(londonL_prev)
+    // London High (SHORT)
+    if not londonTradedH
+        if high >= londonH_prev
+            strategy.entry("London_H_Short", strategy.short, limit=londonH_prev)
+            strategy.exit("TP/SL London H", "London_H_Short", 
+                          limit=londonH_prev - tpPoints, 
+                          stop=londonH_prev + slPoints)
+            londonTradedH := true
+
+    // London Low (LONG)
+    if not londonTradedL
+        if low <= londonL_prev
+            strategy.entry("London_L_Long", strategy.long, limit=londonL_prev)
+            strategy.exit("TP/SL London L", "London_L_Long", 
+                          limit=londonL_prev + tpPoints, 
+                          stop=londonL_prev - slPoints)
+            londonTradedL := true
+
+// Tancament a final de dia (EOD 16:55)
+if isEOD
+    strategy.close_all(comment="EOD Close")
+    strategy.cancel_all()
+
+// ============================================
+// DIBUIX DE NIVELLS AL GRÀFIC
+// ============================================
+plot(not na(asiaH_prev) and tradingWindow ? asiaH_prev : na, "Asia High", color=color.new(#87CEFA, 30), style=plot.style_linebr)
+plot(not na(asiaL_prev) and tradingWindow ? asiaL_prev : na, "Asia Low", color=color.new(#87CEFA, 30), style=plot.style_linebr)
+plot(not na(londonH_prev) and postLondonWindow ? londonH_prev : na, "London High", color=color.new(#CE93D8, 20), style=plot.style_linebr)
+plot(not na(londonL_prev) and postLondonWindow ? londonL_prev : na, "London Low", color=color.new(#CE93D8, 20), style=plot.style_linebr)
