@@ -300,7 +300,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <td><span class="time-badge">08:30 EDT / 14:30 CEST</span></td>
               <td><span class="tag tag-cpi">CPI (INFLACIÓ EUA)</span></td>
               <td>Extrem (Volatilitat)</td>
-              <td><span class="action-badge act-stop">⛔ EVITAR OPERAR AL MATÍ</span></td>
+              <td><span class="action-badge act-stop"><span class="action-badge act-pause">⚠️ CANCEL·LAR SI NO S'HA TOCAT A LES 14:20</span></span></td>
             </tr>
             <tr>
               <td><span class="date-badge">04-05 Nov 2026</span></td>
@@ -321,7 +321,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <td><span class="time-badge">08:30 EST / 14:30 CET</span></td>
               <td><span class="tag tag-cpi">CPI (INFLACIÓ EUA)</span></td>
               <td>Extrem</td>
-              <td><span class="action-badge act-stop">⛔ EVITAR OPERAR AL MATÍ</span></td>
+              <td><span class="action-badge act-stop"><span class="action-badge act-pause">⚠️ CANCEL·LAR SI NO S'HA TOCAT A LES 14:20</span></span></td>
             </tr>
             <tr>
               <td><span class="date-badge">26-27 Nov 2026</span></td>
@@ -342,7 +342,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <td><span class="time-badge">08:30 EST / 14:30 CET</span></td>
               <td><span class="tag tag-cpi">CPI (INFLACIÓ EUA)</span></td>
               <td>Extrem</td>
-              <td><span class="action-badge act-stop">⛔ EVITAR OPERAR AL MATÍ</span></td>
+              <td><span class="action-badge act-stop"><span class="action-badge act-pause">⚠️ CANCEL·LAR SI NO S'HA TOCAT A LES 14:20</span></span></td>
             </tr>
             <tr>
               <td><span class="date-badge">15-16 Des 2026</span></td>
@@ -495,7 +495,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <td><span class="tag tag-cpi">CPI (INFLACIÓ)</span></td>
               <td>14:30 CEST</td>
               <td>Extrem</td>
-              <td><span class="action-badge act-stop">⛔ EVITAR OPERAR AL MATÍ</span></td>
+              <td><span class="action-badge act-stop"><span class="action-badge act-pause">⚠️ CANCEL·LAR SI NO S'HA TOCAT A LES 14:20</span></span></td>
             </tr>
             <tr>
               <td><span class="date-badge">27-28 Jul 2027</span></td>
@@ -516,7 +516,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <td><span class="tag tag-cpi">CPI (INFLACIÓ)</span></td>
               <td>14:30 CEST</td>
               <td>Extrem</td>
-              <td><span class="action-badge act-stop">⛔ EVITAR OPERAR AL MATÍ</span></td>
+              <td><span class="action-badge act-stop"><span class="action-badge act-pause">⚠️ CANCEL·LAR SI NO S'HA TOCAT A LES 14:20</span></span></td>
             </tr>
             <tr>
               <td><span class="date-badge">26-28 Ago 2027</span></td>
@@ -544,7 +544,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <td><span class="tag tag-cpi">CPI (INFLACIÓ)</span></td>
               <td>14:30 CEST</td>
               <td>Extrem</td>
-              <td><span class="action-badge act-stop">⛔ EVITAR OPERAR AL MATÍ</span></td>
+              <td><span class="action-badge act-stop"><span class="action-badge act-pause">⚠️ CANCEL·LAR SI NO S'HA TOCAT A LES 14:20</span></span></td>
             </tr>
             <tr>
               <td><span class="date-badge">21-22 Set 2027</span></td>
@@ -565,7 +565,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <td><span class="tag tag-cpi">CPI (INFLACIÓ)</span></td>
               <td>14:30 CEST</td>
               <td>Extrem</td>
-              <td><span class="action-badge act-stop">⛔ EVITAR OPERAR AL MATÍ</span></td>
+              <td><span class="action-badge act-stop"><span class="action-badge act-pause">⚠️ CANCEL·LAR SI NO S'HA TOCAT A LES 14:20</span></span></td>
             </tr>
             <tr>
               <td><span class="date-badge">02-03 Nov 2027</span></td>
@@ -600,7 +600,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <td><span class="tag tag-cpi">CPI (INFLACIÓ)</span></td>
               <td>14:30 CET</td>
               <td>Extrem</td>
-              <td><span class="action-badge act-stop">⛔ EVITAR OPERAR AL MATÍ</span></td>
+              <td><span class="action-badge act-stop"><span class="action-badge act-pause">⚠️ CANCEL·LAR SI NO S'HA TOCAT A LES 14:20</span></span></td>
             </tr>
             <tr>
               <td><span class="date-badge">14-15 Des 2027</span></td>
