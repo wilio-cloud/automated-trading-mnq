@@ -1,7 +1,7 @@
 import json
 import logging
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Any, Optional, List
 import requests
 from bot.config import config
@@ -16,6 +16,7 @@ class TradovateClient:
         self.user_id: Optional[int] = None
         self.account_id: Optional[int] = config.account_id
         self.account_spec: Optional[str] = config.account_spec
+        self._attempted_resolve_account: bool = False
 
     def authenticate(self) -> bool:
         """
@@ -28,7 +29,7 @@ class TradovateClient:
 
         # Si el token és vigent (amb marge de 5 minuts), no cal renovar
         if self.access_token and self.token_expiry:
-            if datetime.now() < self.token_expiry - timedelta(minutes=5):
+            if datetime.now(timezone.utc) < self.token_expiry - timedelta(minutes=5):
                 return True
 
         url = f"{self.base_url}/auth/accesstokenrequest"
@@ -62,9 +63,9 @@ class TradovateClient:
                     try:
                         self.token_expiry = datetime.fromisoformat(expiration_str.replace("Z", "+00:00"))
                     except Exception:
-                        self.token_expiry = datetime.now() + timedelta(hours=2)
+                        self.token_expiry = datetime.now(timezone.utc) + timedelta(hours=2)
                 else:
-                    self.token_expiry = datetime.now() + timedelta(hours=2)
+                    self.token_expiry = datetime.now(timezone.utc) + timedelta(hours=2)
 
                 logger.info("✅ Autenticació amb Tradovate completada amb èxit!")
                 
@@ -90,6 +91,9 @@ class TradovateClient:
 
     def _resolve_default_account(self):
         """Troba el compte actiu per defecte si no s'ha especificat a .env."""
+        if self._attempted_resolve_account:
+            return
+        self._attempted_resolve_account = True
         try:
             accounts = self.get_accounts()
             if accounts and len(accounts) > 0:
