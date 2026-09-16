@@ -1,7 +1,7 @@
 import json
 import logging
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 from bot.config import config
 
 logger = logging.getLogger("Notifier")
@@ -52,7 +52,7 @@ class BotNotifier:
                 "description": message,
                 "color": color_code,
                 "footer": {"text": f"Tradovate MNQ Zones Bot • {config.tradovate_env.upper()}"},
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.now(timezone.utc).isoformat()
             }]
         }
 
