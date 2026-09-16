@@ -78,8 +78,12 @@ case "$1" in
         echo "⚡ Forçant l'execució de col·locació de zones ara mateix..."
         $PYTHON_CMD bot/main.py --trigger-now
         ;;
+    dashboard)
+        echo "📊 Iniciant el Dashboard Interactiu a http://localhost:8000 ..."
+        $PYTHON_CMD -m uvicorn dashboard.app:app --host 0.0.0.0 --port 8000 --reload
+        ;;
     *)
-        echo "Ús: $0 {check|start|run|stop|status|logs|test-trigger}"
+        echo "Ús: $0 {check|start|run|stop|status|logs|dashboard|test-trigger}"
         exit 1
         ;;
 esac
