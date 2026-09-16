@@ -190,13 +190,18 @@ class LondonZonesStrategy:
         # 0. Briefing Matinal a Discord a les 10:00 CEST (dilluns a divendres)
         now_madrid = datetime.datetime.now(self.tz_madrid)
         if now_madrid.date().weekday() < 5:
-            if now_madrid.hour == 10 and now_madrid.minute == 0:
-                if not self.briefing_sent:
-                    generate_and_send_briefing(now_madrid.date())
-                    self.briefing_sent = True
+            if now_madrid.hour == 10 and not self.briefing_sent:
+                generate_and_send_briefing(now_madrid.date())
+                self.briefing_sent = True
 
-        # 1. Moment de col·locació d'ordres (05:00 EDT)
-        if hour == config.london_end_hour and minute == config.london_end_minute:
+        macro = get_macro_event_for_date(today)
+        is_fomc = macro and macro.get("type") == "FOMC"
+
+        # 1. Moment de col·locació d'ordres (a partir de les 05:00 EDT / 11:00 CEST)
+        is_after_london = (hour > config.london_end_hour) or (hour == config.london_end_hour and minute >= config.london_end_minute)
+        can_trade_now = not (is_fomc and now_madrid.hour >= 18) and (hour < config.eod_close_hour)
+
+        if is_after_london and can_trade_now:
             if not self.orders_placed:
                 self.on_london_close(now)
 
