@@ -202,7 +202,15 @@ class LondonZonesStrategy:
             if not self.orders_placed:
                 self.on_london_close(now)
 
-        # 2. Tancament EOD (16:55 EDT)
+        # 2. Tancament anticipat per a dies de FOMC (18:00 CEST)
+        macro = get_macro_event_for_date(today)
+        if macro and macro.get("type") == "FOMC":
+            if now_madrid.hour >= 18:
+                if not self.eod_cleaned:
+                    logger.info("⏰ Tancament anticipat de seguretat FOMC a les 18:00 CEST...")
+                    self.on_eod_close(now)
+
+        # 3. Tancament EOD estàndard CME (16:55 EDT)
         if hour == config.eod_close_hour and minute >= config.eod_close_minute:
             if not self.eod_cleaned:
                 self.on_eod_close(now)
