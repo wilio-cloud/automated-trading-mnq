@@ -1,6 +1,5 @@
 import logging
 from bot.config import config
-from bot.notifier import notifier
 
 logger = logging.getLogger("RiskManager")
 
@@ -43,7 +42,6 @@ class RiskManager:
                 f"Requerit per operar ({contracts} MNQ + coixí): ${total_needed:,.2f}."
             )
             logger.error(err_msg)
-            notifier.send("ALERTA DE RISC", err_msg, color="danger")
             return False
 
         return True

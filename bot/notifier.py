@@ -1,3 +1,5 @@
+import os
+import sys
 import json
 import logging
 import requests
@@ -38,6 +40,8 @@ class BotNotifier:
             self._send_telegram(title, message)
 
     def _send_discord(self, title: str, message: str, color_name: str):
+        if os.environ.get("TESTING") == "1" or any("unittest" in arg or "pytest" in arg for arg in sys.argv):
+            return
         color_map = {
             "info": 3447003,      # Blau
             "success": 3066993,   # Verd
@@ -64,6 +68,8 @@ class BotNotifier:
             logger.error(f"Excepció enviant a Discord: {e}")
 
     def _send_telegram(self, title: str, message: str):
+        if os.environ.get("TESTING") == "1" or any("unittest" in arg or "pytest" in arg for arg in sys.argv):
+            return
         url = f"https://api.telegram.org/bot{self.telegram_token}/sendMessage"
         text = f"*{title}*\n\n{message}\n\n_Entorn: {config.tradovate_env.upper()}_"
         payload = {

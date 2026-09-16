@@ -105,15 +105,14 @@ class LondonZonesStrategy:
         notifier.send(
             "🇬🇧 ZONES DE LONDRES CALCULADES",
             f"**Data**: {today}\n"
-            f"**Contracte**: `{self.active_symbol}`\n"
-            f"**Mida Posició**: {contracts} MNQ\n"
-            f"**Capital Compte**: ${cash_balance:,.2f}\n\n"
+            f"**Contracte**: `{self.active_symbol}`\n\n"
             f"🔴 **SHORT (London High)**: `{short_entry:.2f}`\n"
-            f"   • Take Profit: `{short_tp:.2f}` (+10.0 pts / +${config.tp_points * config.point_value * contracts:.2f})\n"
-            f"   • Stop Loss:   `{short_sl:.2f}` (-60.0 pts / -${config.sl_points * config.point_value * contracts:.2f})\n\n"
+            f"   • Take Profit: `{short_tp:.2f}` (+{config.tp_points:.1f} pts)\n"
+            f"   • Stop Loss:   `{short_sl:.2f}` (-{config.sl_points:.1f} pts)\n\n"
             f"🟢 **LONG (London Low)**: `{long_entry:.2f}`\n"
-            f"   • Take Profit: `{long_tp:.2f}` (+10.0 pts / +${config.tp_points * config.point_value * contracts:.2f})\n"
-            f"   • Stop Loss:   `{long_sl:.2f}` (-60.0 pts / -${config.sl_points * config.point_value * contracts:.2f})",
+            f"   • Take Profit: `{long_tp:.2f}` (+{config.tp_points:.1f} pts)\n"
+            f"   • Stop Loss:   `{long_sl:.2f}` (-{config.sl_points:.1f} pts)\n\n"
+            f"🎯 _Ordres límit col·locades. Gestió activa de la sessió._",
             color="info"
         )
 
@@ -166,8 +165,7 @@ class LondonZonesStrategy:
             "🌙 TANCAMENT EOD CME (16:55 EDT)",
             f"**Jornada completada**: {now.date()}\n"
             f"• Ordres límit no tocades cancel·lades: {canceled}\n"
-            f"• Posicions aplanades (Flatten) abans de l'overnight.\n"
-            f"• Saldo final del compte: **${final_balance:,.2f}**",
+            f"• Posicions aplanades (Flatten) abans de l'overnight.",
             color="warning"
         )
 
