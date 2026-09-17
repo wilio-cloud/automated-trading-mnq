@@ -9,7 +9,6 @@ from typing import Optional, Dict, Any
 MACRO_EVENTS = {
     # --- 2026 ---
     "2026-09-16": {"type": "FOMC", "severity": "RED", "name": "FOMC Rate Decision", "time_cest": "20:00 CEST", "instructions": "Decisió de tipus de la Fed. Apagar el bot abans de les 18:00 CEST."},
-    "2026-09-17": {"type": "FOMC", "severity": "RED", "name": "FOMC Post-Meeting", "time_cest": "16:00 CEST", "instructions": "Volatilitat residual post-FOMC. Màxima prudència."},
     "2026-10-02": {"type": "NFP", "severity": "AMBER", "name": "NFP (Ocupació EUA)", "time_cest": "14:30 CEST", "instructions": "Sessió de Londres normal al matí. Si no s'ha tocat a les 14:20 CEST, cancel·lar l'ordre límit pendent."},
     "2026-10-14": {"type": "CPI", "severity": "AMBER", "name": "CPI (Inflació EUA)", "time_cest": "14:30 CEST", "instructions": "Zona de Londres vàlida de 11:00 a 14:20 CEST. Cancel·lar immediatament si no s'ha tocat a les 14:20 CEST."},
     "2026-11-04": {"type": "FOMC", "severity": "RED", "name": "FOMC Meeting (Dia 1)", "time_cest": "Tot el dia", "instructions": "Rang estret previ a la decisió de tipus. Operar amb màxima prudència."},

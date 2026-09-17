@@ -40,15 +40,19 @@ def generate_and_send_briefing(target_date: datetime.date = None) -> bool:
             title = f"🟡 BRIEFING MATINAL LONDRES — {date_str}"
             status_text = f"🟡 **TANCAMENT ANTICIPAT A LES 18:00 CEST** ({event_name})"
             color_name = "warning"
+            
+            fed_detail = f"• **De 18:00 a 22:00 CEST**: Prohibit operar durant la decisió de tipus i la roda de premsa de la Fed." if "Rate Decision" in event_name else f"• **Instrucció**: {instructions}"
+            time_label = "HORA DE LA DECISIÓ FED" if "Rate Decision" in event_name else "HORA DE L'ESDEVENIMENT"
+
             desc = (
                 f"**🚦 ESTAT DEL DIA**: {status_text}\n"
-                f"**🕒 HORA DE LA DECISIÓ FED**: `{time_str}`\n"
+                f"**🕒 {time_label}**: `{time_str}`\n"
                 f"**📦 CONTRACTE ACTIU**: `{active_contract}`\n\n"
                 f"**📋 INSTRUCCIONS DEL PROTOCOL**:\n"
                 f"• **11:00 CEST**: Es calculen les zones i es col·loquen les ordres límit amb normalitat.\n"
                 f"• **11:00 a 18:00 CEST**: Finestra operativa permesa (Londres i matí de Nova York).\n"
-                f"• ⛔ **TANCAMENT OBLIGATORI A LES 18:00 CEST**: A les 18:00 CEST es cancel·len totes les ordres pendents i es tanca qualsevol posició oberta (2 hores abans del comunicat de les 20:00h).\n"
-                f"• **De 18:00 a 22:00 CEST**: Prohibit operar durant la decisió de tipus i la roda de premsa de Powell.\n\n"
+                f"• ⛔ **TANCAMENT OBLIGATORI A LES 18:00 CEST**: A les 18:00 CEST es cancel·len totes les ordres pendents i es tanca qualsevol posició oberta (protocol de seguretat).\n"
+                f"{fed_detail}\n\n"
                 f"🎯 _Pròxim avís: Publicació de zones i nivells exactes a les 11:00 CEST._"
             )
         elif severity == "AMBER":
