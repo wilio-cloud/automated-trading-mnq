@@ -1,4 +1,7 @@
+import os
+import json
 import datetime
+from datetime import timezone
 import logging
 import time
 from typing import Optional, Dict, Any
@@ -20,6 +23,7 @@ class LondonZonesStrategy:
         self.tz = pytz.timezone(config.timezone)
         self.tz_madrid = pytz.timezone("Europe/Madrid")
         self.current_trading_date: Optional[datetime.date] = None
+        self.state_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "daily_state.json")
         self.briefing_sent: bool = False
         self.orders_placed: bool = False
         self.amber_cleaned: bool = False
@@ -29,8 +33,54 @@ class LondonZonesStrategy:
         self.active_symbol: Optional[str] = None
         self.london_high: Optional[float] = None
         self.london_low: Optional[float] = None
+        self.asia_high: Optional[float] = None
+        self.asia_low: Optional[float] = None
         self.short_order_id: Optional[int] = None
         self.long_order_id: Optional[int] = None
+        self.asia_short_order_id: Optional[int] = None
+        self.asia_long_order_id: Optional[int] = None
+
+    def load_state(self, today: datetime.date) -> bool:
+        """Carrega l'estat des del fitxer de persistència si correspon a la jornada d'avui."""
+        try:
+            if os.path.exists(self.state_file):
+                with open(self.state_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if data.get("date") == str(today):
+                        self.orders_placed = data.get("orders_placed", False)
+                        self.amber_cleaned = data.get("amber_cleaned", False)
+                        self.eod_cleaned = data.get("eod_cleaned", False)
+                        self.active_symbol = data.get("active_symbol")
+                        self.london_high = data.get("london_high")
+                        self.london_low = data.get("london_low")
+                        self.short_order_id = data.get("short_order_id")
+                        self.long_order_id = data.get("long_order_id")
+                        logger.info(f"💾 Estat recuperat de disc per a {today}: orders_placed={self.orders_placed}")
+                        return True
+        except Exception as e:
+            logger.warning(f"Error carregant estat de disc: {e}")
+        return False
+
+    def save_state(self):
+        """Desa l'estat actual al disc."""
+        try:
+            os.makedirs(os.path.dirname(self.state_file), exist_ok=True)
+            data = {
+                "date": str(self.current_trading_date),
+                "orders_placed": bool(self.orders_placed),
+                "amber_cleaned": bool(self.amber_cleaned),
+                "eod_cleaned": bool(self.eod_cleaned),
+                "active_symbol": str(self.active_symbol) if self.active_symbol is not None else None,
+                "london_high": float(self.london_high) if isinstance(self.london_high, (int, float)) else None,
+                "london_low": float(self.london_low) if isinstance(self.london_low, (int, float)) else None,
+                "short_order_id": int(self.short_order_id) if isinstance(self.short_order_id, int) else None,
+                "long_order_id": int(self.long_order_id) if isinstance(self.long_order_id, int) else None,
+                "updated_at": datetime.datetime.now(timezone.utc).isoformat()
+            }
+            with open(self.state_file, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            logger.warning(f"Error desant estat de disc: {e}")
 
     def reset_for_new_day(self, today: datetime.date):
         """Reinicia l'estat per a una nova jornada operativa."""
@@ -42,9 +92,28 @@ class LondonZonesStrategy:
         self.active_symbol = None
         self.london_high = None
         self.london_low = None
+        self.asia_high = None
+        self.asia_low = None
         self.short_order_id = None
         self.long_order_id = None
-        logger.info(f"🔄 Estat reiniciat per a la jornada: {today}")
+        self.asia_short_order_id = None
+        self.asia_long_order_id = None
+
+        # 1. Intentar carregar estat persistent si el bot s'ha reiniciat durant el dia
+        self.load_state(today)
+
+        # 2. Si no estava marcat com a col·locat, consultar el broker directament
+        if not self.orders_placed:
+            try:
+                if tradovate_client.authenticate():
+                    if tradovate_client.has_orders_or_fills_today(today):
+                        logger.info(f"🛡️ Activitat prèvia detectada a Tradovate per al dia {today}. Marcant orders_placed = True.")
+                        self.orders_placed = True
+                        self.save_state()
+            except Exception as e:
+                logger.warning(f"Error consultant ordres prèvies a Tradovate: {e}")
+
+        logger.info(f"🔄 Estat establert per a la jornada: {today} (orders_placed: {self.orders_placed})")
 
     def on_london_close(self, now: datetime.datetime):
         """
@@ -79,6 +148,13 @@ class LondonZonesStrategy:
             logger.error("Risc: Marge insuficient. Ordres no enviades.")
             return
 
+        # Double-check Tradovate broker history directament abans de col·locar
+        if tradovate_client.has_orders_or_fills_today(today):
+            logger.info(f"🛡️ Tradovate ja té ordres o execucions registrades per a {today}. Ometent col·locació repetida.")
+            self.orders_placed = True
+            self.save_state()
+            return
+
         # 4. Calcular London High i London Low
         self.london_high, self.london_low = zone_calculator.calculate_london_range(
             date=today,
@@ -97,59 +173,130 @@ class LondonZonesStrategy:
         dynamic_tp = 8.0 if self.london_high < 21000.0 else config.tp_points
         dynamic_sl = config.sl_points
 
-        # Zona Alta: Sell Limit @ High
+        # Zona Alta Londres: Sell Limit @ High
         short_entry = self.london_high
         short_tp = round(short_entry - dynamic_tp, 2)
         short_sl = round(short_entry + dynamic_sl, 2)
 
-        # Zona Baixa: Buy Limit @ Low
+        # Zona Baixa Londres: Buy Limit @ Low
         long_entry = self.london_low
         long_tp = round(long_entry + dynamic_tp, 2)
         long_sl = round(long_entry - dynamic_sl, 2)
 
-        # 6. Col·locació d'ordres OSO a Tradovate
+        # 🛡️ SANITY GUARD DE PREU DE MERCAT (Evitar ompliment instantani a mercat)
+        curr_price = tradovate_client.get_current_market_price(config.symbol_base)
+        can_place_short = True
+        can_place_long = True
+
+        if curr_price is not None:
+            logger.info(f"Preu actual de mercat ({config.symbol_base}): {curr_price:.2f}")
+            if curr_price >= short_entry:
+                logger.warning(
+                    f"⚠️ SANITY GUARD: Preu actual ({curr_price:.2f}) >= Short Entry ({short_entry:.2f}). "
+                    f"El mercat ja ha trencat a l'alça! Ometent Sell Limit per evitar conversió a ordre a mercat immediata."
+                )
+                can_place_short = False
+            if curr_price <= long_entry:
+                logger.warning(
+                    f"⚠️ SANITY GUARD: Preu actual ({curr_price:.2f}) <= Long Entry ({long_entry:.2f}). "
+                    f"El mercat ja ha trencat a la baixa! Ometent Buy Limit per evitar conversió a ordre a mercat immediata."
+                )
+                can_place_long = False
+
+        # 6. Si estem en Mode Avaluació, calcular també nivells d'Àsia (Àsia Filtrada >= 11:00 CEST)
+        is_eval_mode = config.bot_mode == "evaluation"
+        asia_msg = ""
+        if is_eval_mode and config.evaluation_include_asia:
+            self.asia_high, self.asia_low = zone_calculator.calculate_asia_range(
+                date=today,
+                tradovate_client=tradovate_client,
+                symbol=self.active_symbol
+            )
+            if self.asia_high and self.asia_low:
+                asia_short_tp = round(self.asia_high - dynamic_tp, 2)
+                asia_short_sl = round(self.asia_high + dynamic_sl, 2)
+                asia_long_tp = round(self.asia_low + dynamic_tp, 2)
+                asia_long_sl = round(self.asia_low - dynamic_sl, 2)
+                asia_msg = (
+                    f"\n\n🌏 **ZONES D'ÀSIA FILTRADA (≥ 11:00 CEST)**:\n"
+                    f"🔴 **SHORT (Asia High)**: `{self.asia_high:.2f}` (TP: `{asia_short_tp:.2f}`, SL: `{asia_short_sl:.2f}`)\n"
+                    f"🟢 **LONG (Asia Low)**:   `{self.asia_low:.2f}` (TP: `{asia_long_tp:.2f}`, SL: `{asia_long_sl:.2f}`)"
+                )
+
+        # 7. Col·locació d'ordres OSO a Tradovate
         regime_str = "< 21.000 pts (TP 8 pts)" if self.london_high < 21000.0 else "≥ 21.000 pts (TP 10 pts)"
+        mode_badge = f"🎯 [MODE AVALUACIÓ FAST-PASS: {contracts} MNQ]" if is_eval_mode else f"🛡️ [MODE FUNDED CONSERVADOR: {contracts} MNQ]"
+        
+        short_status_text = f"`{short_entry:.2f}`\n   • Take Profit: `{short_tp:.2f}` (+{dynamic_tp:.1f} pts)\n   • Stop Loss:   `{short_sl:.2f}` (-{dynamic_sl:.1f} pts)" if can_place_short else f"~~{short_entry:.2f}~~ *(Omesa: preu de mercat ja per sobre)*"
+        long_status_text = f"`{long_entry:.2f}`\n   • Take Profit: `{long_tp:.2f}` (+{dynamic_tp:.1f} pts)\n   • Stop Loss:   `{long_sl:.2f}` (-{dynamic_sl:.1f} pts)" if can_place_long else f"~~{long_entry:.2f}~~ *(Omesa: preu de mercat ja per sota)*"
+
         notifier.send(
-            "🇬🇧 ZONES DE LONDRES CALCULADES",
+            f"{mode_badge} ZONES CALCULADES",
             f"**Data**: {today}\n"
             f"**Contracte**: `{self.active_symbol}`\n"
             f"**Règim NQ**: `{regime_str}`\n\n"
-            f"🔴 **SHORT (London High)**: `{short_entry:.2f}`\n"
-            f"   • Take Profit: `{short_tp:.2f}` (+{dynamic_tp:.1f} pts)\n"
-            f"   • Stop Loss:   `{short_sl:.2f}` (-{dynamic_sl:.1f} pts)\n\n"
-            f"🟢 **LONG (London Low)**: `{long_entry:.2f}`\n"
-            f"   • Take Profit: `{long_tp:.2f}` (+{dynamic_tp:.1f} pts)\n"
-            f"   • Stop Loss:   `{long_sl:.2f}` (-{dynamic_sl:.1f} pts)\n\n"
-            f"🎯 _Ordres límit col·locades. Gestió activa de la sessió._",
+            f"🔴 **SHORT (London High)**: {short_status_text}\n\n"
+            f"🟢 **LONG (London Low)**: {long_status_text}"
+            f"{asia_msg}\n\n"
+            f"🎯 _Ordres límit col·locades amb protecció de creuament._",
             color="info"
         )
 
-        # Enviar Short OSO
-        short_res = tradovate_client.place_bracket_order(
-            symbol=self.active_symbol,
-            action="Sell",
-            qty=contracts,
-            entry_price=short_entry,
-            tp_price=short_tp,
-            sl_price=short_sl
-        )
-        if short_res:
-            self.short_order_id = short_res.get("orderId")
+        # Enviar Short OSO Londres si és segur
+        if can_place_short:
+            short_res = tradovate_client.place_bracket_order(
+                symbol=self.active_symbol,
+                action="Sell",
+                qty=contracts,
+                entry_price=short_entry,
+                tp_price=short_tp,
+                sl_price=short_sl
+            )
+            if short_res:
+                self.short_order_id = short_res.get("orderId")
 
-        # Enviar Long OSO
-        long_res = tradovate_client.place_bracket_order(
-            symbol=self.active_symbol,
-            action="Buy",
-            qty=contracts,
-            entry_price=long_entry,
-            tp_price=long_tp,
-            sl_price=long_sl
-        )
-        if long_res:
-            self.long_order_id = long_res.get("orderId")
+        # Enviar Long OSO Londres si és segur
+        if can_place_long:
+            long_res = tradovate_client.place_bracket_order(
+                symbol=self.active_symbol,
+                action="Buy",
+                qty=contracts,
+                entry_price=long_entry,
+                tp_price=long_tp,
+                sl_price=long_sl
+            )
+            if long_res:
+                self.long_order_id = long_res.get("orderId")
+
+        # Enviar OSO Àsia si estem en mode Avaluació
+        if is_eval_mode and config.evaluation_include_asia and self.asia_high and self.asia_low:
+            # Asia Short OSO
+            a_s_res = tradovate_client.place_bracket_order(
+                symbol=self.active_symbol,
+                action="Sell",
+                qty=contracts,
+                entry_price=self.asia_high,
+                tp_price=round(self.asia_high - dynamic_tp, 2),
+                sl_price=round(self.asia_high + dynamic_sl, 2)
+            )
+            if a_s_res:
+                self.asia_short_order_id = a_s_res.get("orderId")
+
+            # Asia Long OSO
+            a_l_res = tradovate_client.place_bracket_order(
+                symbol=self.active_symbol,
+                action="Buy",
+                qty=contracts,
+                entry_price=self.asia_low,
+                tp_price=round(self.asia_low + dynamic_tp, 2),
+                sl_price=round(self.asia_low - dynamic_sl, 2)
+            )
+            if a_l_res:
+                self.asia_long_order_id = a_l_res.get("orderId")
 
         self.orders_placed = True
-        logger.info("✅ Ordres OSO col·locades correctament al mercat.")
+        self.save_state()
+        logger.info(f"✅ Ordres OSO ({mode_badge}) col·locades correctament al mercat.")
 
     def on_eod_close(self, now: datetime.datetime):
         """
@@ -178,6 +325,7 @@ class LondonZonesStrategy:
         )
 
         self.eod_cleaned = True
+        self.save_state()
 
     def process_tick(self, now: Optional[datetime.datetime] = None):
         """
@@ -206,13 +354,23 @@ class LondonZonesStrategy:
         is_fomc = macro and macro.get("type") == "FOMC"
         is_amber = macro and macro.get("severity") == "AMBER"
 
-        # 1. Moment de col·locació d'ordres (a partir de les 05:00 EDT / 11:00 CEST)
-        is_after_london = (hour > config.london_end_hour) or (hour == config.london_end_hour and minute >= config.london_end_minute)
+        # 1. Moment de col·locació d'ordres
+        # Finestra estricta d'execució de Londres: 05:00 a 05:30 EDT (11:00 a 11:30 CEST)
+        is_london_time = (hour == config.london_end_hour and config.london_end_minute <= minute <= 30)
+        is_past_london_window = (hour > config.london_end_hour) or (hour == config.london_end_hour and minute > 30)
         can_trade_now = not (is_fomc and now_madrid.hour >= 18) and (hour < config.eod_close_hour)
 
-        if is_after_london and can_trade_now:
-            if not self.orders_placed:
+        if not self.orders_placed:
+            if is_london_time and can_trade_now:
                 self.on_london_close(now)
+            elif is_past_london_window:
+                # Si el bot es connecta més tard de les 05:30 EDT, verificar broker
+                if tradovate_client.has_orders_or_fills_today(today):
+                    logger.info(f"🛡️ Jornada en curs: activitat prèvia d'avui ({today}) detectada a Tradovate. Marcant orders_placed = True.")
+                else:
+                    logger.info(f"⏰ Finestra operativa de Londres superada ({hour:02d}:{minute:02d} EDT). No es col·loquen noves ordres intradia.")
+                self.orders_placed = True
+                self.save_state()
 
         # 2. Cancel·lació de protecció en dies AMBER (CPI / NFP) a les 14:20 CEST si no s'ha omplert l'ordre
         if is_amber and (now_madrid.hour > 14 or (now_madrid.hour == 14 and now_madrid.minute >= 20)):

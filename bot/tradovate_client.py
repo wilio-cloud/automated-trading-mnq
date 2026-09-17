@@ -253,6 +253,73 @@ class TradovateClient:
         logger.info(f"Cancel·lades {canceled_count} ordres pendents.")
         return canceled_count
 
+    def get_today_orders(self, today: Optional[datetime.date] = None) -> List[Dict[str, Any]]:
+        """Retorna totes les ordres registrades avui al compte de Tradovate."""
+        if today is None:
+            today = datetime.now(timezone.utc).date()
+        url = f"{self.base_url}/order/list"
+        try:
+            resp = requests.get(url, headers=self._get_headers(), timeout=10)
+            if resp.status_code == 200:
+                all_orders = resp.json()
+                today_orders = []
+                for o in all_orders:
+                    if self.account_id and o.get("accountId") != self.account_id:
+                        continue
+                    ts = o.get("timestamp", "")
+                    td = o.get("tradeDate", {})
+                    if td.get("year") == today.year and td.get("month") == today.month and td.get("day") == today.day:
+                        today_orders.append(o)
+                    elif ts.startswith(today.isoformat()):
+                        today_orders.append(o)
+                return today_orders
+        except Exception as e:
+            logger.error(f"Error consultant ordres d'avui: {e}")
+        return []
+
+    def get_today_fills(self, today: Optional[datetime.date] = None) -> List[Dict[str, Any]]:
+        """Retorna totes les execucions (fills) registrades avui."""
+        if today is None:
+            today = datetime.now(timezone.utc).date()
+        url = f"{self.base_url}/fill/list"
+        try:
+            resp = requests.get(url, headers=self._get_headers(), timeout=10)
+            if resp.status_code == 200:
+                fills = resp.json()
+                today_fills = []
+                for f in fills:
+                    ts = f.get("timestamp", "")
+                    if ts.startswith(today.isoformat()):
+                        today_fills.append(f)
+                return today_fills
+        except Exception as e:
+            logger.error(f"Error consultant fills d'avui: {e}")
+        return []
+
+    def has_orders_or_fills_today(self, today: Optional[datetime.date] = None) -> bool:
+        """Determina si el compte ja ha tingut activitat d'ordres o fills durant la sessió d'avui."""
+        if today is None:
+            today = datetime.now(timezone.utc).date()
+        orders = self.get_today_orders(today)
+        if len(orders) > 0:
+            return True
+        fills = self.get_today_fills(today)
+        return len(fills) > 0
+
+    def get_current_market_price(self, symbol: str = "MNQ") -> Optional[float]:
+        """Obté el preu actual en temps real via CME Globex futures."""
+        import yfinance as yf
+        candidates = [f"{symbol}=F", "MNQ=F", "NQ=F"]
+        for c in candidates:
+            try:
+                t = yf.Ticker(c)
+                p = t.fast_info.get("lastPrice")
+                if p and p > 0:
+                    return float(p)
+            except Exception:
+                continue
+        return None
+
     def get_positions(self) -> List[Dict[str, Any]]:
         """Retorna les posicions obertes actuals."""
         url = f"{self.base_url}/position/list"
