@@ -99,6 +99,14 @@ class LondonZonesStrategy:
         self.asia_short_order_id = None
         self.asia_long_order_id = None
 
+        # Si és cap de setmana (dissabte=5 o diumenge=6), mercat CME tancat
+        if today.weekday() >= 5:
+            self.orders_placed = True
+            self.eod_cleaned = True
+            self.briefing_sent = True
+            logger.info(f"😴 Cap de setmana detectat ({today}). Mercat CME tancat. Bot en mode repòs.")
+            return
+
         # 1. Intentar carregar estat persistent si el bot s'ha reiniciat durant el dia
         self.load_state(today)
 
@@ -305,6 +313,12 @@ class LondonZonesStrategy:
         if self.eod_cleaned:
             return
 
+        today = now.date()
+        # Verificar que no sigui cap de setmana (dissabte=5 o diumenge=6)
+        if today.weekday() >= 5:
+            self.eod_cleaned = True
+            return
+
         logger.info("⏰ Executant protocol de tancament EOD CME (16:55 EDT)...")
         
         # 1. Cancel·lar totes les ordres pendents
@@ -339,6 +353,10 @@ class LondonZonesStrategy:
         # Nou dia?
         if self.current_trading_date != today:
             self.reset_for_new_day(today)
+
+        # Si és cap de setmana (dissabte=5 o diumenge=6), mercat CME tancat: cap acció ni notificació
+        if today.weekday() >= 5:
+            return
 
         hour = now.hour
         minute = now.minute

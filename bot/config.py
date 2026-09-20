@@ -31,6 +31,8 @@ class BotConfig:
     point_value: float = 2.0  # 1 punt MNQ = $2 USD
     
     # Risc i Escalat
+    bot_mode: str = os.getenv("BOT_MODE", "normal").lower()
+    evaluation_include_asia: bool = os.getenv("EVALUATION_INCLUDE_ASIA", "false").lower() in ("true", "1", "yes")
     initial_contracts: int = int(os.getenv("INITIAL_CONTRACTS", "1"))
     auto_scale: bool = os.getenv("AUTO_SCALE", "true").lower() in ("true", "1", "yes")
     scale_threshold_2: float = float(os.getenv("SCALE_THRESHOLD_2_CONTRACTS", "2200.0"))

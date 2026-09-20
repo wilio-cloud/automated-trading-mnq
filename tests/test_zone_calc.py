@@ -11,10 +11,13 @@ from bot.zone_calculator import zone_calculator
 class TestZoneCalculator(unittest.TestCase):
     def test_live_cme_feed(self):
         tz = pytz.timezone("America/New_York")
-        yesterday = (datetime.datetime.now(tz) - datetime.timedelta(days=1)).date()
+        now = datetime.datetime.now(tz)
+        target = now.date() - datetime.timedelta(days=1)
+        while target.weekday() >= 5:
+            target -= datetime.timedelta(days=1)
         
         # Test calculació de Londres
-        high, low = zone_calculator.calculate_london_range(yesterday)
+        high, low = zone_calculator.calculate_london_range(target)
         self.assertIsNotNone(high)
         self.assertIsNotNone(low)
         self.assertGreater(high, low)

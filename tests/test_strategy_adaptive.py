@@ -6,6 +6,7 @@ import datetime
 import pytz
 
 from bot.strategy import LondonZonesStrategy
+from bot.config import config
 
 class TestAdaptiveStrategy(unittest.TestCase):
     def setUp(self):
@@ -29,14 +30,14 @@ class TestAdaptiveStrategy(unittest.TestCase):
         now = datetime.datetime(2026, 9, 15, 5, 5, tzinfo=self.strat.tz)
         self.strat.on_london_close(now)
         
-        # Comprovar crida de short bracket: entry=18500, tp=18492 (-8 pts), sl=18560 (+60 pts)
+        # Comprovar crida de short bracket: entry=18500, tp=18492 (-8 pts), sl=18500 + config.sl_points
         mock_client.place_bracket_order.assert_any_call(
             symbol=self.strat.active_symbol,
             action="Sell",
             qty=5,
             entry_price=18500.0,
             tp_price=18492.0,
-            sl_price=18560.0
+            sl_price=18500.0 + config.sl_points
         )
 
     @patch("bot.strategy.tradovate_client")
@@ -51,7 +52,7 @@ class TestAdaptiveStrategy(unittest.TestCase):
         mock_risk_mgr.calculate_contracts.return_value = 5
         mock_risk_mgr.validate_margin.return_value = True
         
-        # NQ a 29.000 pts (>= 21.000) -> Ha d'aplicar TP 10 pts (config.tp_points)
+        # NQ a 29.000 pts (>= 21.000) -> Ha d'aplicar TP dinàmic (config.tp_points)
         mock_zone_calc.calculate_london_range.return_value = (29100.0, 29000.0)
         
         now = datetime.datetime(2026, 9, 15, 5, 5, tzinfo=self.strat.tz)
@@ -62,8 +63,8 @@ class TestAdaptiveStrategy(unittest.TestCase):
             action="Sell",
             qty=5,
             entry_price=29100.0,
-            tp_price=29090.0,
-            sl_price=29160.0
+            tp_price=round(29100.0 - config.tp_points, 2),
+            sl_price=29100.0 + config.sl_points
         )
 
     @patch("bot.strategy.tradovate_client")
@@ -118,6 +119,29 @@ class TestAdaptiveStrategy(unittest.TestCase):
         
         mock_client.cancel_all_pending_orders.assert_called_once()
         self.assertTrue(self.strat.amber_cleaned)
+
+    @patch("bot.strategy.tradovate_client")
+    @patch("bot.strategy.notifier")
+    def test_weekend_no_notifications_or_orders(self, mock_notifier, mock_client):
+        # 2026-09-19 és dissabte (weekday = 5)
+        saturday = datetime.date(2026, 9, 19)
+        self.strat.reset_for_new_day(saturday)
+        
+        self.assertTrue(self.strat.orders_placed)
+        self.assertTrue(self.strat.eod_cleaned)
+        
+        # Test 1: Tick a les 11:00 CEST (5:00 EDT) en dissabte
+        saturday_11am = datetime.datetime(2026, 9, 19, 5, 0, tzinfo=self.strat.tz)
+        self.strat.process_tick(saturday_11am)
+        mock_client.place_bracket_order.assert_not_called()
+        mock_notifier.send.assert_not_called()
+        
+        # Test 2: Tick a les 22:55 CEST (16:55 EDT) en dissabte
+        saturday_eod = datetime.datetime(2026, 9, 19, 16, 55, tzinfo=self.strat.tz)
+        self.strat.process_tick(saturday_eod)
+        self.strat.on_eod_close(saturday_eod)
+        mock_client.close_all_positions.assert_not_called()
+        mock_notifier.send.assert_not_called()
 
 if __name__ == "__main__":
     unittest.main()

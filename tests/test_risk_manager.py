@@ -10,21 +10,26 @@ from bot.config import config
 
 class TestRiskManager(unittest.TestCase):
     def test_position_sizing(self):
-        # 1. Saldo inicial de 1.000$ -> 1 MNQ
-        self.assertEqual(risk_manager.calculate_contracts(1000.0), 1)
-        self.assertEqual(risk_manager.calculate_contracts(1500.0), 1)
-        self.assertEqual(risk_manager.calculate_contracts(2199.0), 1)
+        old_scale = config.auto_scale
+        config.auto_scale = True
+        try:
+            # 1. Saldo inicial de 1.000$ -> 1 MNQ
+            self.assertEqual(risk_manager.calculate_contracts(1000.0), 1)
+            self.assertEqual(risk_manager.calculate_contracts(1500.0), 1)
+            self.assertEqual(risk_manager.calculate_contracts(2199.0), 1)
 
-        # 2. Saldo de 2.200$ -> 2 MNQ
-        self.assertEqual(risk_manager.calculate_contracts(2200.0), 2)
-        self.assertEqual(risk_manager.calculate_contracts(3000.0), 2)
+            # 2. Saldo de 2.200$ -> 2 MNQ
+            self.assertEqual(risk_manager.calculate_contracts(2200.0), 2)
+            self.assertEqual(risk_manager.calculate_contracts(3000.0), 2)
 
-        # 3. Saldo de 3.500$ -> 3 MNQ
-        self.assertEqual(risk_manager.calculate_contracts(3500.0), 3)
+            # 3. Saldo de 3.500$ -> 3 MNQ
+            self.assertEqual(risk_manager.calculate_contracts(3500.0), 3)
 
-        # 4. Saldo de 4.800$ -> 4 MNQ
-        self.assertEqual(risk_manager.calculate_contracts(4800.0), 4)
-        self.assertEqual(risk_manager.calculate_contracts(7000.0), 4)
+            # 4. Saldo de 4.800$ -> 4 MNQ
+            self.assertEqual(risk_manager.calculate_contracts(4800.0), 4)
+            self.assertEqual(risk_manager.calculate_contracts(7000.0), 4)
+        finally:
+            config.auto_scale = old_scale
 
     def test_margin_validation(self):
         # Amb 1.000$ i 1 MNQ (100$ marge + 300$ buffer = 400$) ha de ser vàlid
