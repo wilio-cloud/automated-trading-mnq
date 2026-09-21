@@ -321,7 +321,7 @@ class TradovateClient:
         return None
 
     def get_positions(self) -> List[Dict[str, Any]]:
-        """Retorna les posicions obertes actuals."""
+        """Retorna les posicions actuals."""
         url = f"{self.base_url}/position/list"
         try:
             resp = requests.get(url, headers=self._get_headers(), timeout=10)
@@ -331,6 +331,10 @@ class TradovateClient:
         except Exception as e:
             logger.error(f"Error consultant posicions: {e}")
         return []
+
+    def get_open_positions(self) -> List[Dict[str, Any]]:
+        """Retorna només les posicions actives amb volum viu (netPos != 0)."""
+        return [p for p in self.get_positions() if p.get("netPos", 0) != 0]
 
     def close_all_positions(self, symbol: Optional[str] = None) -> bool:
         """
