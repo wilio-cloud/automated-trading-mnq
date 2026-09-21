@@ -23,16 +23,16 @@ class BotConfig:
     account_id: Optional[int] = int(os.getenv("TRADOVATE_ACCOUNT_ID")) if os.getenv("TRADOVATE_ACCOUNT_ID") else None
     account_spec: Optional[str] = os.getenv("TRADOVATE_ACCOUNT_SPEC", None)
     
-    # Paràmetres estratègia (80/20 NY Open)
+    # Paràmetres estratègia (Només Londres 11:00 a 15:20 CEST)
     symbol_base: str = os.getenv("SYMBOL_BASE", "MNQ")
-    tp_points: float = float(os.getenv("TP_POINTS", "12.0"))
-    sl_points: float = float(os.getenv("SL_POINTS", "50.0"))
+    tp_points: float = float(os.getenv("TP_POINTS", "14.0"))
+    sl_points: float = float(os.getenv("SL_POINTS", "60.0"))
     max_daily_trades: int = int(os.getenv("MAX_DAILY_TRADES", "1"))
     tick_size: float = 0.25
     point_value: float = 2.0  # 1 punt MNQ = $2 USD
     
     # Risc i Escalat
-    bot_mode: str = os.getenv("BOT_MODE", "funded").lower()  # 'funded', 'evaluation' o 'macro_only'
+    bot_mode: str = os.getenv("BOT_MODE", "real").lower()  # 'real', 'funded', 'evaluation' o 'macro_only'
     initial_contracts: int = int(os.getenv("INITIAL_CONTRACTS", "1"))
     evaluation_contracts: int = int(os.getenv("EVALUATION_CONTRACTS", "8"))  # Opció A: 8 MNQ Turbo Fast-Pass
     evaluation_include_asia: bool = os.getenv("EVALUATION_INCLUDE_ASIA", "true").lower() in ("true", "1", "yes")
@@ -41,6 +41,9 @@ class BotConfig:
     scale_threshold_2: float = float(os.getenv("SCALE_THRESHOLD_2_CONTRACTS", "2200.0"))
     scale_threshold_3: float = float(os.getenv("SCALE_THRESHOLD_3_CONTRACTS", "3500.0"))
     scale_threshold_4: float = float(os.getenv("SCALE_THRESHOLD_4_CONTRACTS", "4800.0"))
+    funded_buffer_contracts: int = int(os.getenv("FUNDED_BUFFER_CONTRACTS", "3"))
+    funded_max_contracts: int = int(os.getenv("FUNDED_MAX_CONTRACTS", "5"))
+    funded_buffer_threshold: float = float(os.getenv("FUNDED_BUFFER_THRESHOLD", "52100.0"))
     
     # Horaris (EDT / America/New_York)
     timezone: str = "America/New_York"
@@ -52,6 +55,8 @@ class BotConfig:
     london_start_minute: int = int(os.getenv("LONDON_START_MINUTE", "0"))
     london_end_hour: int = int(os.getenv("LONDON_END_HOUR", "5"))
     london_end_minute: int = int(os.getenv("LONDON_END_MINUTE", "0"))
+    london_cutoff_hour: int = int(os.getenv("LONDON_CUTOFF_HOUR", "9"))
+    london_cutoff_minute: int = int(os.getenv("LONDON_CUTOFF_MINUTE", "20"))
     eod_close_hour: int = int(os.getenv("EOD_CLOSE_HOUR", "16"))
     eod_close_minute: int = int(os.getenv("EOD_CLOSE_MINUTE", "55"))
     

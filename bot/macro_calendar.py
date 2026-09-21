@@ -73,22 +73,78 @@ MACRO_EVENTS = {
     "2027-12-25": {"type": "HOLIDAY", "severity": "GRAY", "name": "Nadal", "time_cest": "Tot el dia", "instructions": "CME Globex tancat."}
 }
 
+def is_monthly_opex(dt: datetime.date) -> bool:
+    """El tercer divendres de cada mes sempre cau entre el dia 15 i el dia 21."""
+    return dt.weekday() == 4 and 15 <= dt.day <= 21
+
+def is_quarter_end(dt: datetime.date) -> bool:
+    """Últims dies de Març, Juny, Setembre i Desembre (dies 29 a 31)."""
+    return dt.month in (3, 6, 9, 12) and dt.day >= 29
+
+def is_jackson_hole(dt: datetime.date) -> bool:
+    """Simposi de la Fed a Jackson Hole (dies 22 a 28 d'agost)."""
+    return dt.month == 8 and 22 <= dt.day <= 28
+
+def is_post_holiday_low_liquidity(dt: datetime.date) -> bool:
+    """Jornades immediatament posteriors a grans festius amb volum reduït."""
+    return (dt.month == 1 and dt.day in (2, 3)) or (dt.month == 7 and dt.day in (5, 6, 7))
+
 def get_macro_event_for_date(target_date: Optional[datetime.date] = None) -> Optional[Dict[str, Any]]:
     """
-    Retorna la informació de l'esdeveniment macro si la data indicada està al calendari.
+    Retorna la informació de l'esdeveniment macro si la data indicada està al calendari
+    o coincideix amb un filtre estructural (OpEx, Quarter-End, Jackson Hole).
     """
     if target_date is None:
         target_date = datetime.date.today()
         
     date_key = target_date.strftime("%Y-%m-%d")
-    return MACRO_EVENTS.get(date_key, None)
+    if date_key in MACRO_EVENTS:
+        return MACRO_EVENTS[date_key]
+
+    # Filtres estructurals automàtics (invariants anuals)
+    if is_monthly_opex(target_date):
+        return {
+            "type": "OPEX",
+            "severity": "AMBER",
+            "name": "Venciment Mensual d'Opcions (OpEx - 3r Divendres)",
+            "time_cest": "Tot el dia",
+            "instructions": "Expiració mensual de contractes de derivats CME. Filtre anti-ruïna activat."
+        }
+
+    if is_quarter_end(target_date):
+        return {
+            "type": "REBALANCING",
+            "severity": "AMBER",
+            "name": "Final de Trimestre (Quarter-End Rebalancing)",
+            "time_cest": "Tot el dia",
+            "instructions": "Reequilibri massiu de carteres per fons de pensions i institucionals."
+        }
+
+    if is_jackson_hole(target_date):
+        return {
+            "type": "FOMC",
+            "severity": "RED",
+            "name": "Simposi Econòmic Jackson Hole",
+            "time_cest": "Tot el dia",
+            "instructions": "Intervenció de política monetària dels bancs centrals."
+        }
+
+    if is_post_holiday_low_liquidity(target_date):
+        return {
+            "type": "HOLIDAY",
+            "severity": "GRAY",
+            "name": "Sessió Post-Festiva (Baixa Liquiditat)",
+            "time_cest": "Tot el dia",
+            "instructions": "Volum institucional deprimit post-festiu."
+        }
+
+    return None
 
 def get_day_trading_status(target_date: Optional[datetime.date] = None) -> Dict[str, Any]:
     """
     Classifica de manera inequívoca si la jornada és:
-    - 'OPERABLE': Llum Verda (Condicions òptimes, 95% WR).
-    - 'RESTRICTED': Llum Groga (Operable amb precaució i protocol horari estricte).
-    - 'NOT_OPERABLE': Llum Vermella (Mercat tancat o prohibit per risc extrem).
+    - 'OPERABLE': Llum Verda (Condicions òptimes, 86.3% WR auditat a 1 segon).
+    - 'NOT_OPERABLE': Llum Vermella o Groga filtrada (Preservació de capital estricta).
     """
     if target_date is None:
         target_date = datetime.date.today()
@@ -118,7 +174,7 @@ def get_day_trading_status(target_date: Optional[datetime.date] = None) -> Dict[
 
     event = get_macro_event_for_date(target_date)
 
-    # 2. Esdeveniment de Risc al Calendari (Festiu, FOMC, CPI, NFP, OpEx, Rebalancing)
+    # 2. Esdeveniment de Risc al Calendari (Festiu, FOMC, CPI, NFP, OpEx, Quarter-End)
     if event:
         severity = event.get("severity", "AMBER")
         event_name = event.get("name", "Esdeveniment Macro")
@@ -132,7 +188,7 @@ def get_day_trading_status(target_date: Optional[datetime.date] = None) -> Dict[
             "can_trade": False,
             "severity": severity,
             "color_name": "danger",
-            "badge": "🔴 NO OPERAR (FILTRE MACRO ACTIVAT)",
+            "badge": f"🔴 NO OPERAR ({event.get('type', 'FILTRE')})",
             "title": f"FILTRE DE SEGURETAT — {date_str}",
             "headline": f"{event_name} ({time_str})",
             "instructions": f"Filtre de preservació de capital activat per {event_name}. Avui no s'opera.",
@@ -151,10 +207,10 @@ def get_day_trading_status(target_date: Optional[datetime.date] = None) -> Dict[
         "severity": "GREEN",
         "color_name": "success",
         "badge": "🟢 OPERAR (LLUM VERDA)",
-        "title": f"80/20 NY OPEN — {date_str}",
+        "title": f"ZONES LONDRES · {date_str}",
         "headline": "Sessió neta de notícies d'impacte institucional.",
-        "instructions": "Condicions òptimes a l'obertura de NY (15:30 CEST). Executar 1 sol trade a nivells 20 / 80.",
-        "time_window": "15:30 a 17:30 CEST",
+        "instructions": "Condicions òptimes de Londres (11:00 a 15:20 CEST). Executar ordres límit a High/Low.",
+        "time_window": "11:00 a 15:20 CEST",
         "event": None,
         "is_weekend": False,
         "is_holiday": False

@@ -31,6 +31,24 @@ class TestRiskManager(unittest.TestCase):
         finally:
             config.auto_scale = old_scale
 
+    def test_funded_sizing(self):
+        old_mode = config.bot_mode
+        old_scale = config.auto_scale
+        config.bot_mode = "funded"
+        config.auto_scale = True
+        try:
+            # 1. Fase de Construcció de Matalàs (< 52.100$) -> 3 MNQ estrictes
+            self.assertEqual(risk_manager.calculate_contracts(50000.0), 3)
+            self.assertEqual(risk_manager.calculate_contracts(50800.0), 3)
+            self.assertEqual(risk_manager.calculate_contracts(52099.0), 3)
+
+            # 2. Fase Post-Matalàs (>= 52.100$) -> 5 MNQ
+            self.assertEqual(risk_manager.calculate_contracts(52100.0), 5)
+            self.assertEqual(risk_manager.calculate_contracts(54000.0), 5)
+        finally:
+            config.bot_mode = old_mode
+            config.auto_scale = old_scale
+
     def test_margin_validation(self):
         # Amb 1.000$ i 1 MNQ (100$ marge + 300$ buffer = 400$) ha de ser vàlid
         self.assertTrue(risk_manager.validate_margin(1000.0, 1))

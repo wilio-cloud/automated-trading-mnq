@@ -143,5 +143,46 @@ class TestAdaptiveStrategy(unittest.TestCase):
         mock_client.close_all_positions.assert_not_called()
         mock_notifier.send.assert_not_called()
 
+    @patch("bot.strategy.tradovate_client")
+    @patch("bot.strategy.notifier")
+    def test_london_cutoff_at_1520(self, mock_notifier, mock_client):
+        # 15:20 CEST = 09:20 EDT
+        mock_client.authenticate.return_value = True
+        mock_client.has_orders_or_fills_today.return_value = False
+        mock_client.get_open_positions.return_value = []
+        mock_client.cancel_all_pending_orders.return_value = 2
+
+        t_date = datetime.date(2026, 9, 22)  # Dimarts net
+        self.strat.reset_for_new_day(t_date)
+        self.strat.orders_placed = True
+        self.strat.cutoff_cleaned = False
+
+        # Tick a les 09:20 EDT (15:20 CEST)
+        now_edt = datetime.datetime(2026, 9, 22, 9, 20, tzinfo=self.strat.tz)
+        self.strat.process_tick(now_edt)
+
+        mock_client.cancel_all_pending_orders.assert_called_once()
+        self.assertTrue(self.strat.cutoff_cleaned)
+
+    @patch("bot.strategy.tradovate_client")
+    @patch("bot.strategy.notifier")
+    def test_macro_opex_blocks_orders(self, mock_notifier, mock_client):
+        # 2026-10-16 és 3r divendres d'octubre (OpEx mensual)
+        opex_date = datetime.date(2026, 10, 16)
+        self.strat.reset_for_new_day(opex_date)
+
+        now_11am = datetime.datetime(2026, 10, 16, 5, 0, tzinfo=self.strat.tz)
+        self.strat.on_london_close(now_11am)
+
+        mock_client.place_bracket_order.assert_not_called()
+        self.assertTrue(self.strat.orders_placed)
+
+    def test_benchmark_parameters(self):
+        # TP 14 pts (+28$) i SL 60 pts (-120$) del model institucional
+        self.assertEqual(config.tp_points, 14.0)
+        self.assertEqual(config.sl_points, 60.0)
+        self.assertEqual(config.london_cutoff_hour, 9)
+        self.assertEqual(config.london_cutoff_minute, 20)
+
 if __name__ == "__main__":
     unittest.main()

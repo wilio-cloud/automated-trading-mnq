@@ -14,7 +14,7 @@ from bot.zone_calculator import zone_calculator
 from bot.risk_manager import risk_manager
 from bot.notifier import notifier
 from bot.daily_briefing import generate_and_send_briefing
-from bot.macro_calendar import get_macro_event_for_date
+from bot.macro_calendar import get_macro_event_for_date, get_day_trading_status
 
 logger = logging.getLogger("Strategy")
 
@@ -27,6 +27,7 @@ class LondonZonesStrategy:
         self.briefing_sent: bool = False
         self.orders_placed: bool = False
         self.amber_cleaned: bool = False
+        self.cutoff_cleaned: bool = False
         self.eod_cleaned: bool = False
         
         # Estat diari
@@ -49,6 +50,7 @@ class LondonZonesStrategy:
                     if data.get("date") == str(today):
                         self.orders_placed = data.get("orders_placed", False)
                         self.amber_cleaned = data.get("amber_cleaned", False)
+                        self.cutoff_cleaned = data.get("cutoff_cleaned", False)
                         self.eod_cleaned = data.get("eod_cleaned", False)
                         self.active_symbol = data.get("active_symbol")
                         self.london_high = data.get("london_high")
@@ -69,6 +71,7 @@ class LondonZonesStrategy:
                 "date": str(self.current_trading_date),
                 "orders_placed": bool(self.orders_placed),
                 "amber_cleaned": bool(self.amber_cleaned),
+                "cutoff_cleaned": bool(self.cutoff_cleaned),
                 "eod_cleaned": bool(self.eod_cleaned),
                 "active_symbol": str(self.active_symbol) if self.active_symbol is not None else None,
                 "london_high": float(self.london_high) if isinstance(self.london_high, (int, float)) else None,
@@ -88,6 +91,7 @@ class LondonZonesStrategy:
         self.briefing_sent = False
         self.orders_placed = False
         self.amber_cleaned = False
+        self.cutoff_cleaned = False
         self.eod_cleaned = False
         self.active_symbol = None
         self.london_high = None
@@ -136,6 +140,14 @@ class LondonZonesStrategy:
         # Verificar que sigui dia laborable (dilluns=0 a divendres=4)
         if today.weekday() >= 5:
             logger.info(f"Cap de setmana detectat ({today}). Mercat CME tancat.")
+            return
+
+        # 0. Verificar que el dia sigui operable segons el filtre macro institucional (anti-ruïna)
+        day_status = get_day_trading_status(today)
+        if not day_status.get("can_trade", True):
+            logger.info(f"🛡️ Filtre Macro / Seguretat actiu avui ({day_status.get('headline')}). Ometent col·locació d'ordres.")
+            self.orders_placed = True
+            self.save_state()
             return
 
         # 1. Assegurar autenticació
@@ -232,8 +244,13 @@ class LondonZonesStrategy:
                 )
 
         # 7. Col·locació d'ordres OSO a Tradovate
-        regime_str = "< 21.000 pts (TP 8 pts)" if self.london_high < 21000.0 else "≥ 21.000 pts (TP 10 pts)"
-        mode_badge = f"🎯 [MODE AVALUACIÓ FAST-PASS: {contracts} MNQ]" if is_eval_mode else f"🛡️ [MODE FUNDED CONSERVADOR: {contracts} MNQ]"
+        regime_str = "< 21.000 pts (TP 8 pts)" if self.london_high < 21000.0 else f"≥ 21.000 pts (TP {config.tp_points:.0f} pts)"
+        if is_eval_mode:
+            mode_badge = f"🎯 [MODE AVALUACIÓ FAST-PASS: {contracts} MNQ]"
+        elif config.bot_mode == "funded":
+            mode_badge = f"🛡️ [MODE FUNDED CONSERVADOR: {contracts} MNQ]"
+        else:
+            mode_badge = f"💼 [COMPTE REAL: {contracts} MNQ]"
         
         short_status_text = f"`{short_entry:.2f}`\n   • Take Profit: `{short_tp:.2f}` (+{dynamic_tp:.1f} pts)\n   • Stop Loss:   `{short_sl:.2f}` (-{dynamic_sl:.1f} pts)" if can_place_short else f"~~{short_entry:.2f}~~ *(Omesa: preu de mercat ja per sobre)*"
         long_status_text = f"`{long_entry:.2f}`\n   • Take Profit: `{long_tp:.2f}` (+{dynamic_tp:.1f} pts)\n   • Stop Loss:   `{long_sl:.2f}` (-{dynamic_sl:.1f} pts)" if can_place_long else f"~~{long_entry:.2f}~~ *(Omesa: preu de mercat ja per sota)*"
@@ -369,6 +386,7 @@ class LondonZonesStrategy:
                 self.briefing_sent = True
 
         macro = get_macro_event_for_date(today)
+        day_status = get_day_trading_status(today)
         is_fomc = macro and macro.get("type") == "FOMC"
         is_amber = macro and macro.get("severity") == "AMBER"
 
@@ -376,11 +394,15 @@ class LondonZonesStrategy:
         # Finestra estricta d'execució de Londres: 05:00 a 05:30 EDT (11:00 a 11:30 CEST)
         is_london_time = (hour == config.london_end_hour and config.london_end_minute <= minute <= 30)
         is_past_london_window = (hour > config.london_end_hour) or (hour == config.london_end_hour and minute > 30)
-        can_trade_now = not (is_fomc and now_madrid.hour >= 18) and (hour < config.eod_close_hour)
+        can_trade_now = day_status.get("can_trade", True) and not (is_fomc and now_madrid.hour >= 18) and (hour < config.eod_close_hour)
 
         if not self.orders_placed:
             if is_london_time and can_trade_now:
                 self.on_london_close(now)
+            elif is_london_time and not day_status.get("can_trade", True):
+                logger.info(f"🛡️ Filtre Macro / Seguretat actiu avui ({day_status.get('headline')}). Ometent col·locació d'ordres.")
+                self.orders_placed = True
+                self.save_state()
             elif is_past_london_window:
                 # Si el bot es connecta més tard de les 05:30 EDT, verificar broker
                 if tradovate_client.has_orders_or_fills_today(today):
@@ -390,7 +412,35 @@ class LondonZonesStrategy:
                 self.orders_placed = True
                 self.save_state()
 
-        # 2. Cancel·lació de protecció en dies AMBER (CPI / NFP) a les 14:20 CEST si no s'ha omplert l'ordre
+        # 2. Cancel·lació de tall de sessió de Londres a les 15:20 CEST (09:20 EDT)
+        # Retirar ordres límit pendents no executades abans de la volatilitat d'obertura a Wall Street (15:30 CEST)
+        is_cutoff_time = (hour > config.london_cutoff_hour) or (hour == config.london_cutoff_hour and minute >= config.london_cutoff_minute)
+        if is_cutoff_time and self.orders_placed and not self.cutoff_cleaned and hour < config.eod_close_hour:
+            logger.info("⏰ Tall de finestra de Londres (15:20 CEST / 09:20 EDT): Cancel·lant ordres límit pendents no executades...")
+            canceled = 0
+            open_positions = tradovate_client.get_open_positions()
+            if len(open_positions) == 0:
+                canceled = tradovate_client.cancel_all_pending_orders()
+            else:
+                if self.short_order_id and tradovate_client.cancel_order(self.short_order_id):
+                    canceled += 1
+                if self.long_order_id and tradovate_client.cancel_order(self.long_order_id):
+                    canceled += 1
+                if self.asia_short_order_id and tradovate_client.cancel_order(self.asia_short_order_id):
+                    canceled += 1
+                if self.asia_long_order_id and tradovate_client.cancel_order(self.asia_long_order_id):
+                    canceled += 1
+            if canceled > 0:
+                notifier.send(
+                    "⏰ TANCAMENT FINESTRA LONDRES (15:20 CEST)",
+                    f"• S'han retirat {canceled} ordre(s) límit no tocades abans de NY Open (15:30 CEST).\n"
+                    f"• Blindatge de capital contra fuetades d'obertura a Wall Street.",
+                    color="info"
+                )
+            self.cutoff_cleaned = True
+            self.save_state()
+
+        # 3. Cancel·lació de protecció en dies AMBER (CPI / NFP) a les 14:20 CEST si no s'ha omplert l'ordre
         if is_amber and (now_madrid.hour > 14 or (now_madrid.hour == 14 and now_madrid.minute >= 20)):
             if self.orders_placed and not self.amber_cleaned:
                 logger.info("⚠️ Notícia AMBER detectada: Cancel·lant ordres límit pendents abans de les 14:30...")
@@ -404,13 +454,13 @@ class LondonZonesStrategy:
                 )
                 self.amber_cleaned = True
 
-        # 3. Tancament anticipat per a dies de FOMC (18:00 CEST)
+        # 4. Tancament anticipat per a dies de FOMC (18:00 CEST)
         if is_fomc and now_madrid.hour >= 18:
             if not self.eod_cleaned:
                 logger.info("⏰ Tancament anticipat de seguretat FOMC a les 18:00 CEST...")
                 self.on_eod_close(now)
 
-        # 4. Tancament EOD estàndard CME (16:55 EDT)
+        # 5. Tancament EOD estàndard CME (16:55 EDT)
         if hour == config.eod_close_hour and minute >= config.eod_close_minute:
             if not self.eod_cleaned:
                 self.on_eod_close(now)

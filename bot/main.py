@@ -53,8 +53,8 @@ def start_health_server(port: int):
                 active_contract = resolve_active_contract(tradovate_client, config.symbol_base)
                 resp = {
                     "status": "healthy",
-                    "service": "MNQ 80/20 NY Open & Macro Bot",
-                    "strategy": "80/20 NY Open (15:30 CEST)",
+                    "service": "MNQ Institutional London Zones Bot",
+                    "strategy": "London Zones (11:00 to 15:20 CEST)",
                     "tp_points": config.tp_points,
                     "sl_points": config.sl_points,
                     "max_daily_trades": config.max_daily_trades,
@@ -105,7 +105,7 @@ def run_health_check():
     print(f"📋 Context:                      {day_info['headline']}")
     print(f"🌐 Entorn Tradovate:             {config.tradovate_env.upper()}")
     print(f"🎯 Estratègia:                   Només Londres (TP: {config.tp_points} pts | SL: {config.sl_points} pts)")
-    print(f"🛡️  Risc:                         1 MNQ per posició (Inici 1.000$)")
+    print(f"🛡️  Risc:                         Escalat des d'1 MNQ ({config.bot_mode.upper()})")
     
     # 1. Contracte actiu
     active_contract = resolve_active_contract(tradovate_client, config.symbol_base)
@@ -159,10 +159,13 @@ def start_daemon():
         except ValueError:
             logger.warning(f"PORT invàlid a l'entorn: {port_env}")
 
-    # 2. Enviar Briefing d'Arrencada a Discord immediatament
-    logger.info("Enviant estat inicial d'operabilitat macro a Discord...")
-    generate_and_send_briefing(now_madrid.date(), is_startup=True)
-    strategy.briefing_sent = True
+    # 2. Enviar Briefing d'Arrencada a Discord (només dies laborables de dilluns a divendres)
+    if now_madrid.date().weekday() < 5:
+        logger.info("Enviant estat inicial d'operabilitat macro a Discord...")
+        generate_and_send_briefing(now_madrid.date(), is_startup=True)
+        strategy.briefing_sent = True
+    else:
+        logger.info("😴 Cap de setmana detectat. Mercat CME tancat, se suprimeix notificació d'arrencada a Discord.")
 
     logger.info("Bot en marxa. Esperant les finestres operatives...")
 
