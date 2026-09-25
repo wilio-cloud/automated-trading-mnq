@@ -137,6 +137,13 @@ class LondonZonesStrategy:
             return
 
         today = now.date()
+        # Verificar que el trading estigui habilitat al config
+        if not config.enable_trading:
+            logger.info("🛑 TRADING DESACTIVAT (ENABLE_TRADING=False): Cap ordre serà col·locada a Tradovate.")
+            self.orders_placed = True
+            self.save_state()
+            return
+
         # Verificar que sigui dia laborable (dilluns=0 a divendres=4)
         if today.weekday() >= 5:
             logger.info(f"Cap de setmana detectat ({today}). Mercat CME tancat.")

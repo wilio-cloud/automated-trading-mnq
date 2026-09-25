@@ -32,6 +32,7 @@ class BotConfig:
     point_value: float = 2.0  # 1 punt MNQ = $2 USD
     
     # Risc i Escalat
+    enable_trading: bool = os.getenv("ENABLE_TRADING", "false").lower() in ("true", "1", "yes")
     bot_mode: str = os.getenv("BOT_MODE", "real").lower()  # 'real', 'funded', 'evaluation' o 'macro_only'
     initial_contracts: int = int(os.getenv("INITIAL_CONTRACTS", "1"))
     evaluation_contracts: int = int(os.getenv("EVALUATION_CONTRACTS", "8"))  # Opció A: 8 MNQ Turbo Fast-Pass
