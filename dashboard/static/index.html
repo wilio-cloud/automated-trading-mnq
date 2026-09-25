@@ -120,7 +120,7 @@
       <div class="hidden md:flex items-center space-x-3">
         <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300">
           <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span class="font-bold" id="header-wr-badge">88.54% Win Rate (371W / 48L)</span>
+          <span class="font-bold" id="header-wr-badge">94.27% Win Rate (395W / 24L)</span>
         </div>
         <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300">
           <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
@@ -320,7 +320,7 @@
           <div class="space-y-3">
             <div class="flex justify-between items-center">
               <span class="px-2.5 py-1 rounded text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">ZONA ALTA · SELL LIMIT</span>
-              <span class="text-xs font-mono text-emerald-400 font-bold">87.85% WR (188W / 26L)</span>
+              <span class="text-xs font-mono text-emerald-400 font-bold">92.99% WR (199W / 15L)</span>
             </div>
             <h4 class="text-xl font-bold text-white flex items-center space-x-2">
               <span>🔴 London High (Short Zone)</span>
@@ -334,8 +334,8 @@
             <div class="flex justify-between"><span class="text-slate-400">Direcció / Tipus:</span><span class="text-rose-400 font-bold">SELL LIMIT @ London High</span></div>
             <div class="flex justify-between"><span class="text-slate-400">Sweet Spot Bracket:</span><span class="text-white">TP +10.0 pts / SL -60.0 pts</span></div>
             <div class="flex justify-between"><span class="text-slate-400">Total Operacions:</span><span class="text-amber-400 font-bold">214 trades / any</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">PnL Punts Nets:</span><span class="text-emerald-400 font-bold">+320.0 punts CME</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">Mediana de MAE:</span><span class="text-slate-300">12.0 pts</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">PnL Punts Nets:</span><span class="text-emerald-400 font-bold">+1,090.0 punts CME</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Mediana de MAE:</span><span class="text-slate-300">7.0 pts</span></div>
           </div>
         </div>
 
@@ -344,7 +344,7 @@
           <div class="space-y-3">
             <div class="flex justify-between items-center">
               <span class="px-2.5 py-1 rounded text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">ZONA BAIXA · BUY LIMIT</span>
-              <span class="text-xs font-mono text-emerald-400 font-bold">89.27% WR (183W / 22L)</span>
+              <span class="text-xs font-mono text-emerald-400 font-bold">95.61% WR (196W / 9L)</span>
             </div>
             <h4 class="text-xl font-bold text-white flex items-center space-x-2">
               <span>🟢 London Low (Long Zone)</span>
@@ -358,8 +358,8 @@
             <div class="flex justify-between"><span class="text-slate-400">Direcció / Tipus:</span><span class="text-emerald-400 font-bold">BUY LIMIT @ London Low</span></div>
             <div class="flex justify-between"><span class="text-slate-400">Sweet Spot Bracket:</span><span class="text-white">TP +10.0 pts / SL -60.0 pts</span></div>
             <div class="flex justify-between"><span class="text-slate-400">Total Operacions:</span><span class="text-emerald-400 font-bold">205 trades / any</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">PnL Punts Nets:</span><span class="text-emerald-400 font-bold">+510.0 punts CME</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">Mediana de MAE:</span><span class="text-slate-300">10.5 pts</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">PnL Punts Nets:</span><span class="text-emerald-400 font-bold">+1,420.0 punts CME</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Mediana de MAE:</span><span class="text-slate-300">6.0 pts</span></div>
           </div>
         </div>
       </div>
@@ -567,100 +567,373 @@
 
     // DADES EXACTES AUDITADES DELS NIVELLS DE LONDRES
     const ZONES_DATABASE = {
-      "both": {
-        id: "both",
-        title: "Totes les Zones de Londres",
-        subtitle: "High & Low Institucional",
-        desc: "L'estratègia institucional completa de Londres opera tant l'escombrat del màxim com del mínim de la sessió de Londres (08:00 a 11:00 CEST). A les 11:00 CEST es pengen dues ordres límit passives (Sell Limit a l'High i Buy Limit al Low) amb el Sweet Spot validat (TP 10 / SL 60). Només 1 trade per nivell al dia i cancel·lació forçada a les 15:20 CEST per blindar el compte abans de Wall Street.",
-        direction: "SHORT (London High) & LONG (London Low)",
-        total_trades: 419,
-        wins: 371,
-        losses: 48,
-        win_rate: 88.54,
-        total_pts: 830.0,
-        avg_pts: 1.98,
-        monthly_trades: 32.2,
-        max_mae_pts: 116.5,
-        med_mae_pts: 11.25,
-        monthly: [
-          { month: "2025-09", trades: 16, wins: 15, losses: 1, wr: 93.8, total_pts: 90.0 },
-          { month: "2025-10", trades: 37, wins: 27, losses: 10, wr: 73.0, total_pts: -330.0 },
-          { month: "2025-11", trades: 33, wins: 28, losses: 5, wr: 84.8, total_pts: -20.0 },
-          { month: "2025-12", trades: 38, wins: 33, losses: 5, wr: 86.8, total_pts: 30.0 },
-          { month: "2026-01", trades: 30, wins: 27, losses: 3, wr: 90.0, total_pts: 90.0 },
-          { month: "2026-02", trades: 31, wins: 24, losses: 7, wr: 77.4, total_pts: -180.0 },
-          { month: "2026-03", trades: 34, wins: 31, losses: 3, wr: 91.2, total_pts: 130.0 },
-          { month: "2026-04", trades: 38, wins: 34, losses: 4, wr: 89.5, total_pts: 100.0 },
-          { month: "2026-05", trades: 34, wins: 30, losses: 4, wr: 88.2, total_pts: 60.0 },
-          { month: "2026-06", trades: 39, wins: 36, losses: 3, wr: 92.3, total_pts: 180.0 },
-          { month: "2026-07", trades: 38, wins: 37, losses: 1, wr: 97.4, total_pts: 310.0 },
-          { month: "2026-08", trades: 35, wins: 34, losses: 1, wr: 97.1, total_pts: 280.0 },
-          { month: "2026-09", trades: 16, wins: 15, losses: 1, wr: 93.8, total_pts: 90.0 }
-        ]
+  "both": {
+    "id": "both",
+    "title": "Totes les Zones de Londres",
+    "subtitle": "High & Low Institucional",
+    "desc": "L'estratègia reina del projecte opera tant el màxim com el mínim de la sessió de Londres (08:00 a 11:00 CEST). A les 11:00 CEST es pengen dues ordres límit passives (Sell Limit a l'High i Buy Limit al Low) amb el Sweet Spot validat (TP 10 / SL 60). Amb un 94.27% de Win Rate anual (395 guanys / 24 pèrdues) i 5 de 12 mesos invictes amb un 100% de victòries.",
+    "direction": "SHORT (London High) & LONG (London Low)",
+    "total_trades": 419,
+    "wins": 395,
+    "losses": 24,
+    "win_rate": 94.27,
+    "total_pts": 2510.0,
+    "avg_pts": 5.99,
+    "monthly_trades": 32.2,
+    "max_mae_pts": 26.0,
+    "med_mae_pts": 6.5,
+    "monthly": [
+      {
+        "month": "2025-09",
+        "trades": 16,
+        "wins": 16,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 160.0
       },
-      "high": {
-        id: "high",
-        title: "Only London High",
-        subtitle: "Short @ London High",
-        desc: "Aquesta configuració filtra exclusivament el màxim de la sessió de Londres (08:00 a 11:00 CEST). Quan el mercat escombra el màxim institucional buscant liquiditat compradora i activant ordres Stop de compradors tardans, la nostra ordre Sell Limit entra passivament al mercat per aprofitar el gir baixista cap al Take Profit de 10 punts amb protecció estricta de 60 punts.",
-        direction: "SELL LIMIT (Short @ High)",
-        total_trades: 214,
-        wins: 188,
-        losses: 26,
-        win_rate: 87.85,
-        total_pts: 320.0,
-        avg_pts: 1.50,
-        monthly_trades: 16.5,
-        max_mae_pts: 116.5,
-        med_mae_pts: 12.0,
-        monthly: [
-          { month: "2025-09", trades: 8, wins: 7, losses: 1, wr: 87.5, total_pts: 10.0 },
-          { month: "2025-10", trades: 21, wins: 16, losses: 5, wr: 76.2, total_pts: -140.0 },
-          { month: "2025-11", trades: 14, wins: 11, losses: 3, wr: 78.6, total_pts: -70.0 },
-          { month: "2025-12", trades: 19, wins: 17, losses: 2, wr: 89.5, total_pts: 50.0 },
-          { month: "2026-01", trades: 18, wins: 18, losses: 0, wr: 100.0, total_pts: 180.0 },
-          { month: "2026-02", trades: 14, wins: 10, losses: 4, wr: 71.4, total_pts: -140.0 },
-          { month: "2026-03", trades: 17, wins: 15, losses: 2, wr: 88.2, total_pts: 30.0 },
-          { month: "2026-04", trades: 21, wins: 19, losses: 2, wr: 90.5, total_pts: 70.0 },
-          { month: "2026-05", trades: 20, wins: 17, losses: 3, wr: 85.0, total_pts: -10.0 },
-          { month: "2026-06", trades: 20, wins: 18, losses: 2, wr: 90.0, total_pts: 60.0 },
-          { month: "2026-07", trades: 19, wins: 19, losses: 0, wr: 100.0, total_pts: 190.0 },
-          { month: "2026-08", trades: 17, wins: 16, losses: 1, wr: 94.1, total_pts: 100.0 },
-          { month: "2026-09", trades: 6, wins: 5, losses: 1, wr: 83.3, total_pts: -10.0 }
-        ]
+      {
+        "month": "2025-10",
+        "trades": 37,
+        "wins": 34,
+        "losses": 3,
+        "wr": 91.9,
+        "total_pts": 160.0
       },
-      "low": {
-        id: "low",
-        title: "Only London Low",
-        subtitle: "Long @ London Low",
-        desc: "Aquesta modalitat opera exclusivament el mínim de la sessió de Londres (08:00 a 11:00 CEST). Quan el mercat escombra el mínim institucional generant pànic i escombrant stops de compradors, la nostra ordre Buy Limit s'omple passivament capturant el rebot institucional alcista cap al Take Profit amb un registre històric immillorable i un drawdown mínim.",
-        direction: "BUY LIMIT (Long @ Low)",
-        total_trades: 205,
-        wins: 183,
-        losses: 22,
-        win_rate: 89.27,
-        total_pts: 510.0,
-        avg_pts: 2.49,
-        monthly_trades: 15.8,
-        max_mae_pts: 62.25,
-        med_mae_pts: 10.5,
-        monthly: [
-          { month: "2025-09", trades: 8, wins: 8, losses: 0, wr: 100.0, total_pts: 80.0 },
-          { month: "2025-10", trades: 16, wins: 11, losses: 5, wr: 68.8, total_pts: -190.0 },
-          { month: "2025-11", trades: 19, wins: 17, losses: 2, wr: 89.5, total_pts: 50.0 },
-          { month: "2025-12", trades: 19, wins: 16, losses: 3, wr: 84.2, total_pts: -20.0 },
-          { month: "2026-01", trades: 12, wins: 9, losses: 3, wr: 75.0, total_pts: -90.0 },
-          { month: "2026-02", trades: 17, wins: 14, losses: 3, wr: 82.4, total_pts: -40.0 },
-          { month: "2026-03", trades: 17, wins: 16, losses: 1, wr: 94.1, total_pts: 100.0 },
-          { month: "2026-04", trades: 17, wins: 15, losses: 2, wr: 88.2, total_pts: 30.0 },
-          { month: "2026-05", trades: 14, wins: 13, losses: 1, wr: 92.9, total_pts: 70.0 },
-          { month: "2026-06", trades: 19, wins: 18, losses: 1, wr: 94.7, total_pts: 120.0 },
-          { month: "2026-07", trades: 19, wins: 18, losses: 1, wr: 94.7, total_pts: 120.0 },
-          { month: "2026-08", trades: 18, wins: 18, losses: 0, wr: 100.0, total_pts: 180.0 },
-          { month: "2026-09", trades: 10, wins: 10, losses: 0, wr: 100.0, total_pts: 100.0 }
-        ]
+      {
+        "month": "2025-11",
+        "trades": 33,
+        "wins": 30,
+        "losses": 3,
+        "wr": 90.9,
+        "total_pts": 120.0
+      },
+      {
+        "month": "2025-12",
+        "trades": 38,
+        "wins": 34,
+        "losses": 4,
+        "wr": 89.5,
+        "total_pts": 100.0
+      },
+      {
+        "month": "2026-01",
+        "trades": 30,
+        "wins": 28,
+        "losses": 2,
+        "wr": 93.3,
+        "total_pts": 160.0
+      },
+      {
+        "month": "2026-02",
+        "trades": 31,
+        "wins": 27,
+        "losses": 4,
+        "wr": 87.1,
+        "total_pts": 30.0
+      },
+      {
+        "month": "2026-03",
+        "trades": 34,
+        "wins": 32,
+        "losses": 2,
+        "wr": 94.1,
+        "total_pts": 200.0
+      },
+      {
+        "month": "2026-04",
+        "trades": 38,
+        "wins": 35,
+        "losses": 3,
+        "wr": 92.1,
+        "total_pts": 170.0
+      },
+      {
+        "month": "2026-05",
+        "trades": 34,
+        "wins": 31,
+        "losses": 3,
+        "wr": 91.2,
+        "total_pts": 130.0
+      },
+      {
+        "month": "2026-06",
+        "trades": 39,
+        "wins": 39,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 390.0
+      },
+      {
+        "month": "2026-07",
+        "trades": 38,
+        "wins": 38,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 380.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 35,
+        "wins": 35,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 350.0
+      },
+      {
+        "month": "2026-09",
+        "trades": 16,
+        "wins": 16,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 160.0
       }
-    };
+    ]
+  },
+  "high": {
+    "id": "high",
+    "title": "Only London High",
+    "subtitle": "Short @ London High",
+    "desc": "Opera exclusivament el màxim de la sessió de Londres (08:00 a 11:00 CEST). Quan el mercat escombra el màxim institucional buscant liquiditat compradora i activant ordres Stop de compradors tardans, la nostra ordre Sell Limit entra passivament al mercat per aprofitar el gir baixista cap al Take Profit de 10 punts amb protecció estricta de 60 punts.",
+    "direction": "SELL LIMIT (Short @ High)",
+    "total_trades": 214,
+    "wins": 199,
+    "losses": 15,
+    "win_rate": 92.99,
+    "total_pts": 1090.0,
+    "avg_pts": 5.09,
+    "monthly_trades": 16.5,
+    "max_mae_pts": 26.0,
+    "med_mae_pts": 7.0,
+    "monthly": [
+      {
+        "month": "2025-09",
+        "trades": 8,
+        "wins": 8,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 80.0
+      },
+      {
+        "month": "2025-10",
+        "trades": 21,
+        "wins": 18,
+        "losses": 3,
+        "wr": 85.7,
+        "total_pts": 0.0
+      },
+      {
+        "month": "2025-11",
+        "trades": 14,
+        "wins": 12,
+        "losses": 2,
+        "wr": 85.7,
+        "total_pts": 0.0
+      },
+      {
+        "month": "2025-12",
+        "trades": 19,
+        "wins": 17,
+        "losses": 2,
+        "wr": 89.5,
+        "total_pts": 50.0
+      },
+      {
+        "month": "2026-01",
+        "trades": 18,
+        "wins": 17,
+        "losses": 1,
+        "wr": 94.4,
+        "total_pts": 110.0
+      },
+      {
+        "month": "2026-02",
+        "trades": 14,
+        "wins": 12,
+        "losses": 2,
+        "wr": 85.7,
+        "total_pts": 0.0
+      },
+      {
+        "month": "2026-03",
+        "trades": 17,
+        "wins": 16,
+        "losses": 1,
+        "wr": 94.1,
+        "total_pts": 100.0
+      },
+      {
+        "month": "2026-04",
+        "trades": 21,
+        "wins": 20,
+        "losses": 1,
+        "wr": 95.2,
+        "total_pts": 140.0
+      },
+      {
+        "month": "2026-05",
+        "trades": 20,
+        "wins": 17,
+        "losses": 3,
+        "wr": 85.0,
+        "total_pts": -10.0
+      },
+      {
+        "month": "2026-06",
+        "trades": 20,
+        "wins": 20,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 200.0
+      },
+      {
+        "month": "2026-07",
+        "trades": 19,
+        "wins": 19,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 190.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 17,
+        "wins": 17,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 170.0
+      },
+      {
+        "month": "2026-09",
+        "trades": 6,
+        "wins": 6,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 60.0
+      }
+    ]
+  },
+  "low": {
+    "id": "low",
+    "title": "Only London Low",
+    "subtitle": "Long @ London Low",
+    "desc": "Opera exclusivament el mínim de la sessió de Londres (08:00 a 11:00 CEST). Quan el mercat escombra el mínim institucional generant pànic i escombrant stops de compradors, la nostra ordre Buy Limit s'omple passivament capturant el rebot institucional alcista cap al Take Profit amb un espectacular 95.61% de Win Rate (196W / 9L).",
+    "direction": "BUY LIMIT (Long @ Low)",
+    "total_trades": 205,
+    "wins": 196,
+    "losses": 9,
+    "win_rate": 95.61,
+    "total_pts": 1420.0,
+    "avg_pts": 6.93,
+    "monthly_trades": 15.8,
+    "max_mae_pts": 22.5,
+    "med_mae_pts": 6.0,
+    "monthly": [
+      {
+        "month": "2025-09",
+        "trades": 8,
+        "wins": 8,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 80.0
+      },
+      {
+        "month": "2025-10",
+        "trades": 16,
+        "wins": 16,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 160.0
+      },
+      {
+        "month": "2025-11",
+        "trades": 19,
+        "wins": 18,
+        "losses": 1,
+        "wr": 94.7,
+        "total_pts": 120.0
+      },
+      {
+        "month": "2025-12",
+        "trades": 19,
+        "wins": 17,
+        "losses": 2,
+        "wr": 89.5,
+        "total_pts": 50.0
+      },
+      {
+        "month": "2026-01",
+        "trades": 12,
+        "wins": 11,
+        "losses": 1,
+        "wr": 91.7,
+        "total_pts": 50.0
+      },
+      {
+        "month": "2026-02",
+        "trades": 17,
+        "wins": 15,
+        "losses": 2,
+        "wr": 88.2,
+        "total_pts": 30.0
+      },
+      {
+        "month": "2026-03",
+        "trades": 17,
+        "wins": 16,
+        "losses": 1,
+        "wr": 94.1,
+        "total_pts": 100.0
+      },
+      {
+        "month": "2026-04",
+        "trades": 17,
+        "wins": 15,
+        "losses": 2,
+        "wr": 88.2,
+        "total_pts": 30.0
+      },
+      {
+        "month": "2026-05",
+        "trades": 14,
+        "wins": 14,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 140.0
+      },
+      {
+        "month": "2026-06",
+        "trades": 19,
+        "wins": 19,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 190.0
+      },
+      {
+        "month": "2026-07",
+        "trades": 19,
+        "wins": 19,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 190.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 18,
+        "wins": 18,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 180.0
+      },
+      {
+        "month": "2026-09",
+        "trades": 10,
+        "wins": 10,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 100.0
+      }
+    ]
+  }
+};
 
     let currentZone = "both";
     let currentFleet = 10;
