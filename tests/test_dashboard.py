@@ -70,10 +70,17 @@ class TestDashboard(unittest.TestCase):
         self.assertEqual(r_adv.status_code, 200)
         self.assertGreater(r_adv.json()["recommended_monthly_withdrawal"], 0)
 
+        # GET /api/london-zones
+        r_zones = self.client.get("/api/london-zones")
+        self.assertEqual(r_zones.status_code, 200)
+        self.assertIn("both", r_zones.json())
+        self.assertIn("high", r_zones.json())
+        self.assertIn("low", r_zones.json())
+
         # GET / (Index HTML)
         r_index = self.client.get("/")
         self.assertEqual(r_index.status_code, 200)
-        self.assertIn("MNQ ZONES PRO TERMINAL", r_index.text)
+        self.assertIn("MNQ LONDON ZONES PRO", r_index.text)
 
 if __name__ == "__main__":
     unittest.main()

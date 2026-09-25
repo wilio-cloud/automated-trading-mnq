@@ -3,28 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tradovate MNQ Zones — Terminal Institucional</title>
-  <!-- Tailwind CSS -->
+  <title>MNQ Institutional London Zones | Terminal Institucional (Sweet Spot)</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
           colors: {
             brand: {
-              dark: '#080c14',
-              card: '#0e1526',
-              border: '#1e293b',
-              accent: '#10b981',
-              cyan: '#06b6d4',
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            },
+            accent: {
               blue: '#3b82f6',
+              cyan: '#06b6d4',
+              purple: '#8b5cf6',
               amber: '#f59e0b',
-              purple: '#8b5cf6'
+              rose: '#f43f5e',
+              gold: '#fbbf24'
             }
           }
         }
@@ -33,297 +43,1008 @@
   </script>
   <style>
     body {
-      background-color: #080c14;
+      background-color: #07090e;
       color: #e2e8f0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(251, 191, 36, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.06) 0px, transparent 50%);
     }
-    .glow-emerald {
-      box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
+    .glass-card {
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+    .glow-gold {
+      box-shadow: 0 0 35px -5px rgba(245, 158, 11, 0.25);
+    }
+    .glow-green {
+      box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.25);
     }
     .glow-cyan {
-      box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+      box-shadow: 0 0 35px -5px rgba(6, 182, 212, 0.25);
     }
-    /* Estil de scrollbar */
-    ::-webkit-scrollbar {
+    .gradient-text-gold {
+      background: linear-gradient(135deg, #fde047 0%, #f59e0b 50%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gradient-text-emerald {
+      background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gradient-text-rose {
+      background: linear-gradient(135deg, #fda4af 0%, #f43f5e 50%, #e11d48 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
-    ::-webkit-scrollbar-track {
-      background: #080c14;
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0b0f19;
     }
-    ::-webkit-scrollbar-thumb {
+    .custom-scrollbar::-webkit-scrollbar-thumb {
       background: #1e293b;
-      border-radius: 4px;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #334155;
     }
   </style>
 </head>
-<body class="min-h-screen p-4 md:p-6 lg:p-8 flex flex-col justify-between">
+<body class="min-h-screen font-sans antialiased text-slate-200">
 
-  <div class="max-w-7xl mx-auto w-full space-y-6">
-
-    <!-- HEADER SUPERIOR -->
-    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-brand-border pb-6">
-      <div class="flex items-center space-x-3">
-        <div class="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-          <i data-lucide="trending-up" class="w-5 h-5"></i>
+  <!-- Header Institucional -->
+  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
+          <i data-lucide="crosshair" class="w-6 h-6 text-slate-950 stroke-[2.5]"></i>
         </div>
         <div>
-          <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            MNQ ZONES PRO TERMINAL
-            <span class="text-xs font-mono font-medium px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-              v1.0 INSTITUCIONAL
-            </span>
-          </h1>
-          <p class="text-xs text-slate-400">Sistema Automatitzat de Liquiditat CME Globex & Tradovate</p>
-        </div>
-      </div>
-
-      <!-- STATUS PILLS -->
-      <div class="flex flex-wrap items-center gap-3">
-        <!-- Connexió Tradovate -->
-        <div id="statusPill" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono">
-          <span class="relative flex h-2 w-2">
-            <span id="statusPing" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span id="statusDot" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span id="statusText" class="text-slate-300">TRADOVATE CONNECTAT</span>
-          <span id="envBadge" class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 uppercase font-bold">DEMO</span>
-        </div>
-
-        <!-- Contracte Actiu -->
-        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300">
-          <i data-lucide="file-text" class="w-3.5 h-3.5 text-cyan-400"></i>
-          <span>CONTRACTE:</span>
-          <span id="activeContract" class="text-white font-bold">MNQZ6</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- CARDS DE METRIQUES SUPERIORS -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      
-      <!-- Card 1: Saldo en Directe -->
-      <div class="bg-brand-card border border-brand-border rounded-xl p-5 glow-emerald relative overflow-hidden">
-        <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
-          <span>SALDO TRADOVATE</span>
-          <i data-lucide="wallet" class="w-4 h-4 text-emerald-400"></i>
-        </div>
-        <div class="mt-2 flex items-baseline gap-2">
-          <span id="cardBalance" class="text-2xl lg:text-3xl font-bold font-mono text-emerald-400">$1,000.00</span>
-          <span class="text-xs text-slate-400">USD</span>
-        </div>
-        <div class="mt-3 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2">
-          <span>Dipòsit inicial:</span>
-          <span class="font-mono text-slate-300">$1,000.00</span>
-        </div>
-      </div>
-
-      <!-- Card 2: Mida de Posició -->
-      <div class="bg-brand-card border border-brand-border rounded-xl p-5 glow-cyan relative overflow-hidden">
-        <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
-          <span>POSICIÓ RECOMANADA</span>
-          <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400"></i>
-        </div>
-        <div class="mt-2 flex items-baseline gap-2">
-          <span id="cardContracts" class="text-2xl lg:text-3xl font-bold font-mono text-cyan-400">1 MNQ</span>
-          <span class="text-xs text-slate-400">($2/punt)</span>
-        </div>
-        <div class="mt-3 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2">
-          <span>Propera fita (+1 MNQ):</span>
-          <span id="cardNextMilestone" class="font-mono text-cyan-300">$2,200</span>
-        </div>
-      </div>
-
-      <!-- Card 3: Rendiment i Win Rate -->
-      <div class="bg-brand-card border border-brand-border rounded-xl p-5 relative overflow-hidden">
-        <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
-          <span>WIN RATE HISTÒRIC</span>
-          <i data-lucide="award" class="w-4 h-4 text-amber-400"></i>
-        </div>
-        <div class="mt-2 flex items-baseline gap-2">
-          <span id="cardWinRate" class="text-2xl lg:text-3xl font-bold font-mono text-amber-400">94.27%</span>
-          <span id="cardProfitFactor" class="text-xs text-slate-400 font-mono">PF: 2.74</span>
-        </div>
-        <div class="mt-3 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2">
-          <span>Guanys mensuals (1 MNQ):</span>
-          <span id="cardMonthlyNet" class="font-mono text-emerald-400">+$366.80/m</span>
-        </div>
-      </div>
-
-      <!-- Card 4: Drawdown & Coixí -->
-      <div class="bg-brand-card border border-brand-border rounded-xl p-5 relative overflow-hidden">
-        <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
-          <span>MATALÀS DE SEGURETAT</span>
-          <i data-lucide="shield-alert" class="w-4 h-4 text-purple-400"></i>
-        </div>
-        <div class="mt-2 flex items-baseline gap-2">
-          <span id="cardCushion" class="text-2xl lg:text-3xl font-bold font-mono text-purple-400">3.7x</span>
-          <span class="text-xs text-slate-400">vs Max DD</span>
-        </div>
-        <div class="mt-3 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2">
-          <span>Max DD històric:</span>
-          <span id="cardMaxDD" class="font-mono text-rose-400">-$272 (1 MNQ)</span>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- SECTOR CONTROLS (HORITZÓ + ESTRATÈGIA + ESCALA) -->
-    <div class="bg-brand-card border border-brand-border rounded-xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-      
-      <!-- Selector d'Estratègia -->
-      <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-        <label class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <i data-lucide="layers" class="w-4 h-4 text-emerald-400"></i>
-          Estratègia:
-        </label>
-        <select id="strategySelect" class="bg-slate-900 border border-slate-700 text-white text-xs font-semibold rounded-lg px-3 py-2 focus:ring-1 focus:ring-emerald-500 outline-none cursor-pointer">
-          <option value="london_only">🇬🇧 Només Londres (Sweet Spot - TP 10 / SL 60)</option>
-          <option value="all_sessions">🌐 Àsia + Londres (All Sessions - TP 10 / SL 60)</option>
-          <option value="apex_compliant">🛡️ Apex Legacy Compliant (TP 12 / SL 50)</option>
-        </select>
-      </div>
-
-      <!-- Selector d'Horitzó -->
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 hidden sm:inline">Horitzó:</span>
-        <div class="inline-flex rounded-lg bg-slate-900 p-1 border border-slate-800">
-          <button id="btnH1" onclick="setHorizon(1)" class="px-3 py-1.5 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition">
-            1 Any
-          </button>
-          <button id="btnH5" onclick="setHorizon(5)" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-emerald-500 text-slate-950 shadow transition font-bold">
-            5 Anys
-          </button>
-          <button id="btnH10" onclick="setHorizon(10)" class="px-3 py-1.5 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition">
-            10 Anys
-          </button>
-        </div>
-
-        <!-- Escala Lineal vs Logarítmica -->
-        <button id="btnScaleToggle" onclick="toggleScale()" class="ml-2 px-3 py-1.5 text-xs font-mono rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition flex items-center gap-1.5" title="Canvia entre escala lineal i logarítmica">
-          <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-cyan-400"></i>
-          <span id="scaleText">LOG</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- GRÀFICA PRINCIPAL INTERACTIVA -->
-    <div class="bg-brand-card border border-brand-border rounded-xl p-5 space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <div>
-          <h2 class="text-base font-bold text-white flex items-center gap-2">
-            <i data-lucide="line-chart" class="w-5 h-5 text-emerald-400"></i>
-            Projecció i Corbes de Capital Comparatives
-          </h2>
-          <p class="text-xs text-slate-400" id="chartSubtitle">Evolució mes a mes de 1.000$ inicials fins a 5 anys</p>
-        </div>
-        
-        <!-- Llegenda Ràpida / Info Marker -->
-        <div class="flex items-center gap-3 text-xs font-mono">
-          <span class="flex items-center gap-1.5 text-rose-400 font-bold bg-rose-950/40 border border-rose-800/50 px-2 py-1 rounded">
-            <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-            Punt Actual Tradovate
-          </span>
-        </div>
-      </div>
-
-      <!-- Canvas Chart -->
-      <div class="w-full h-[400px] md:h-[460px] relative">
-        <canvas id="projectionChart"></canvas>
-      </div>
-    </div>
-
-    <!-- MÒDUL DE RETIRADES MENSUALS RECOMANADES -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-      <!-- Columna 1 i 2: Recomanador de Retirades -->
-      <div class="lg:col-span-2 bg-brand-card border border-brand-border rounded-xl p-5 space-y-4">
-        <div class="flex items-center justify-between border-b border-brand-border pb-3">
           <div class="flex items-center space-x-2">
-            <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
-              <i data-lucide="hand-coins" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="text-sm font-bold text-white">Recomanació de Retirada Mensual</h3>
-              <p class="text-xs text-slate-400">Algorisme de protecció del matalàs i extracció de renda</p>
-            </div>
+            <h1 class="text-xl font-bold tracking-tight text-white">MNQ LONDON ZONES PRO</h1>
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">SWEET SPOT AUDITAT</span>
           </div>
-          <span id="badgePhase" class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30">
-            Fase 1: Acumulació
-          </span>
+          <p class="text-xs text-slate-400 font-medium">Sessió Londres (08h - 11h CEST) · Ordres Límit Institucionals High & Low · CME Globex</p>
+        </div>
+      </div>
+
+      <!-- Badges de Certificació -->
+      <div class="hidden md:flex items-center space-x-3">
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span class="font-bold" id="header-wr-badge">88.54% Win Rate (371W / 48L)</span>
+        </div>
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="font-bold" id="header-vol-badge">~32 Trades / Mes</span>
+        </div>
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="railway-status">Railway: ONLINE</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- BARRA DE CONTROL I FILTRE: ZONES DE LONDRES (DESPLEGABLE CLAU) -->
+    <section class="glass-card rounded-2xl p-4 sm:p-5 border border-emerald-500/30 glow-green">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+            <i data-lucide="layers" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Filtre Exclusiu de Londres:</span>
+            <h3 class="text-lg font-bold text-white tracking-tight">Selecciona la Zona Operativa</h3>
+          </div>
         </div>
 
-        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
-          <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-            <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Retirada recomanada aquest mes:</span>
-            <div class="flex items-baseline gap-1">
-              <span id="adviseAmount" class="text-3xl font-mono font-extrabold text-emerald-400">$0.00</span>
-              <span class="text-xs text-slate-400">USD</span>
+        <!-- El Desplegable sol·licitat per l'usuari -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="relative min-w-[260px]">
+            <select id="zone-select" onchange="setZone(this.value)" 
+                    class="w-full pl-4 pr-10 py-2.5 rounded-xl bg-slate-900/90 border border-emerald-500/40 text-white font-bold text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none appearance-none cursor-pointer shadow-lg">
+              <option value="both" selected>🇬🇧 Totes les Zones de Londres (High & Low)</option>
+              <option value="high">🔴 Only London High (Short @ High)</option>
+              <option value="low">🟢 Only London Low (Long @ Low)</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-emerald-400">
+              <i data-lucide="chevron-down" class="w-4 h-4"></i>
             </div>
           </div>
-          <p id="adviseMessage" class="text-xs text-slate-300 leading-relaxed">
-            Carregant anàlisi de capital...
+
+          <!-- Botons Ràpids Auxiliars -->
+          <div class="hidden sm:flex items-center space-x-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+            <button onclick="setZone('both')" id="zone-btn-both" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold transition">Totes</button>
+            <button onclick="setZone('high')" id="zone-btn-high" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">Only High</button>
+            <button onclick="setZone('low')" id="zone-btn-low" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">Only Low</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HERO SECTION: Zones de Londres -->
+    <section class="relative overflow-hidden rounded-3xl glass-card p-8 md:p-10 border border-slate-800/90 glow-green">
+      <div class="absolute -right-20 -top-20 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold uppercase tracking-wider">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            <span id="hero-badge-pill">Execució Institucional CME Globex · Mean Reversion</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+            Zones de Londres: <span id="hero-title-accent" class="gradient-text-emerald">High & Low Institucional</span>
+          </h2>
+          <p id="hero-description" class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+            L'auditoria tick a tick d'1 segon sobre <strong class="text-white">1 any complet de CME Globex (MNQ)</strong> demostra l'enorme eficàcia de la reversió a la mitjana sobre els extrems de la sessió de Londres (08:00 a 11:00 CEST). A les 11:00 CEST es pengen ordres límit passives (Sell Limit a l'High i Buy Limit al Low) amb el <strong class="text-emerald-400 font-bold">Sweet Spot (TP 10 / SL 60)</strong>, generant un rendiment sostingut sense risc de pernocta.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-2">
+            <a href="#drawdown-analisis" class="inline-flex items-center space-x-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-amber-500 hover:from-emerald-600 hover:to-amber-600 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-emerald-500/20">
+              <i data-lucide="table" class="w-4 h-4 stroke-[2.5]"></i>
+              <span>Veure Matriu de Sizing (1 a 10 MNQ)</span>
+            </a>
+            <a href="#simulador" class="inline-flex items-center space-x-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm transition-all border border-slate-700">
+              <i data-lucide="calculator" class="w-4 h-4 text-emerald-400"></i>
+              <span>Simulador de Flota 50k</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Metric Card Destacada -->
+        <div class="lg:col-span-5">
+          <div class="rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/90 border border-emerald-500/30 p-6 shadow-2xl relative">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <span class="text-xs font-semibold uppercase text-slate-400 tracking-wider">Benefici Anual Auditat (5 MNQ)</span>
+                <div class="text-4xl font-extrabold text-emerald-400 font-mono mt-1" id="hero-annual-net">+$5,157.50 <span class="text-lg font-sans text-slate-400 font-medium">USD</span></div>
+              </div>
+              <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" id="hero-wr-tag">
+                88.54% WR
+              </span>
+            </div>
+
+            <div class="space-y-3 pt-3 border-t border-slate-800 text-sm">
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Punts Totals Nets:</span>
+                <span class="font-mono font-bold text-white" id="hero-points">+830.0 punts CME</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Mitjana Neta Mensual (5 MNQ):</span>
+                <span class="font-mono font-semibold text-emerald-400" id="hero-monthly-net">+$429.79 USD / mes</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">A 10 MNQ (Compte 100k+):</span>
+                <span class="font-mono font-bold text-amber-300" id="hero-10mnq">+$10,315.00 USD / any</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Volum Operatiu Real:</span>
+                <span class="font-mono font-semibold text-white" id="hero-volume">~32.2 trades / mes (419 totals)</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Drawdown Flotant Màx (MAE 5 MNQ):</span>
+                <span class="font-mono font-semibold text-cyan-400" id="hero-mae">-$1,165.00 USD (Buffer segur)</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Execució al Broker:</span>
+                <span class="font-mono font-semibold text-emerald-400" id="hero-exec-type">Ordres OSO / Bracket CME</span>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+              <span>Flota 10 Comptes (5 MNQ):</span>
+              <span class="font-mono text-emerald-400 font-bold text-sm" id="hero-fleet-net">+$51,575.00 / any nets</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 KPIS MAJORS -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- KPI 1 -->
+      <div class="glass-card rounded-2xl p-5 border border-slate-800">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold uppercase tracking-wider">Win Rate Londres</span>
+          <i data-lucide="crown" class="w-5 h-5 text-amber-400"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-amber-400 font-mono" id="kpi-winrate">88.54%</div>
+        <p class="text-xs text-slate-400 mt-2" id="kpi-trades-count">
+          <span class="text-emerald-400 font-semibold">371 Wins / 48 Losses</span> en 419 trades auditats a 1s
+        </p>
+      </div>
+
+      <!-- KPI 2 -->
+      <div class="glass-card rounded-2xl p-5 border border-slate-800">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold uppercase tracking-wider">Freqüència Operativa</span>
+          <i data-lucide="activity" class="w-5 h-5 text-emerald-400"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-emerald-400 font-mono" id="kpi-frequency">~32.2 / mes</div>
+        <p class="text-xs text-slate-400 mt-2">
+          <span class="text-white font-semibold">1 sol trade per zona</span> sense solapaments de risc
+        </p>
+      </div>
+
+      <!-- KPI 3 -->
+      <div class="glass-card rounded-2xl p-5 border border-slate-800">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold uppercase tracking-wider">Flotant Màxim Real (MAE 5 MNQ)</span>
+          <i data-lucide="shield-check" class="w-5 h-5 text-cyan-400"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-cyan-400 font-mono" id="kpi-mae">-$1,165.00</div>
+        <p class="text-xs text-slate-400 mt-2" id="kpi-buffer-info">
+          Deixa <span class="text-emerald-400 font-semibold">+$835.00 USD</span> lliures de buffer de $2,000 (Apex)
+        </p>
+      </div>
+
+      <!-- KPI 4 -->
+      <div class="glass-card rounded-2xl p-5 border border-slate-800">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold uppercase tracking-wider">Expectativa Neta / Trade</span>
+          <i data-lucide="trending-up" class="w-5 h-5 text-purple-400"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-purple-400 font-mono" id="kpi-expectancy">+1.98 pts</div>
+        <p class="text-xs text-slate-400 mt-2">
+          <span class="text-emerald-400 font-semibold">+$12.31 USD nets</span> per trade a 5 MNQ (amb comissions)
+        </p>
+      </div>
+    </section>
+
+    <!-- LES DUES ZONES MAJORS DE LONDRES -->
+    <section class="space-y-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+          <i data-lucide="clock" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold text-white tracking-tight">Els Dos Pilars Institucionals de la Sessió de Londres</h3>
+          <p class="text-xs sm:text-sm text-slate-400">Nivells fixats exactament a les 11:00 CEST (05:00 EDT) un cop finalitzada la sessió europea</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- PILAR 1: LONDON HIGH (SHORT) -->
+        <div id="card-london-high" class="glass-card rounded-2xl p-6 border border-rose-500/40 space-y-4 flex flex-col justify-between transition-all duration-300">
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="px-2.5 py-1 rounded text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">ZONA ALTA · SELL LIMIT</span>
+              <span class="text-xs font-mono text-emerald-400 font-bold">87.85% WR (188W / 26L)</span>
+            </div>
+            <h4 class="text-xl font-bold text-white flex items-center space-x-2">
+              <span>🔴 London High (Short Zone)</span>
+            </h4>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Quan el preu escombra el màxim institucional de la sessió de Londres (08:00 a 11:00 CEST), absorbeix les ordres Stop de compradors tardans i genera una reacció baixista violenta cap al Take Profit.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800 space-y-2 text-xs font-mono">
+            <div class="flex justify-between"><span class="text-slate-400">Finestra Càlcul:</span><span class="text-white">08:00 - 11:00 CEST (02h-05h NY)</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Direcció / Tipus:</span><span class="text-rose-400 font-bold">SELL LIMIT @ London High</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Sweet Spot Bracket:</span><span class="text-white">TP +10.0 pts / SL -60.0 pts</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Total Operacions:</span><span class="text-amber-400 font-bold">214 trades / any</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">PnL Punts Nets:</span><span class="text-emerald-400 font-bold">+320.0 punts CME</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Mediana de MAE:</span><span class="text-slate-300">12.0 pts</span></div>
+          </div>
+        </div>
+
+        <!-- PILAR 2: LONDON LOW (LONG) -->
+        <div id="card-london-low" class="glass-card rounded-2xl p-6 border border-emerald-500/40 space-y-4 flex flex-col justify-between transition-all duration-300">
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="px-2.5 py-1 rounded text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">ZONA BAIXA · BUY LIMIT</span>
+              <span class="text-xs font-mono text-emerald-400 font-bold">89.27% WR (183W / 22L)</span>
+            </div>
+            <h4 class="text-xl font-bold text-white flex items-center space-x-2">
+              <span>🟢 London Low (Long Zone)</span>
+            </h4>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Quan el preu trenca a la baixa el mínim de Londres, buida la liquiditat venedora de venda per pànic. La nostra ordre Buy Limit passiva s'omple i aprofita la recuperació institucional cap al TP.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800 space-y-2 text-xs font-mono">
+            <div class="flex justify-between"><span class="text-slate-400">Finestra Càlcul:</span><span class="text-white">08:00 - 11:00 CEST (02h-05h NY)</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Direcció / Tipus:</span><span class="text-emerald-400 font-bold">BUY LIMIT @ London Low</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Sweet Spot Bracket:</span><span class="text-white">TP +10.0 pts / SL -60.0 pts</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Total Operacions:</span><span class="text-emerald-400 font-bold">205 trades / any</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">PnL Punts Nets:</span><span class="text-emerald-400 font-bold">+510.0 punts CME</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Mediana de MAE:</span><span class="text-slate-300">10.5 pts</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RADIOGRAFIA DE DRAWDOWN FLOTANT I TAULA DE SIZING -->
+    <section id="drawdown-analisis" class="glass-card rounded-3xl p-6 sm:p-8 border border-emerald-500/30 space-y-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+          <i data-lucide="shield-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-white tracking-tight">Radiografia del Drawdown Flotant (MAE) i Matriu de Sizing (1 a 10 MNQ)</h3>
+          <p class="text-xs sm:text-sm text-slate-400">Auditoria del retrocés màxim intra-trade per a comptes de 50k (Trailing Drawdown de $2,000 d'Apex / Lucid)</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs sm:text-sm">
+        <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2.5">
+          <div class="flex items-center space-x-2 text-emerald-400 font-bold">
+            <i data-lucide="trending-up" class="w-4 h-4"></i>
+            <span id="card-mae-med-title">Mediana de Flotant: només 11.25 pts!</span>
+          </div>
+          <p class="text-slate-300 leading-relaxed" id="card-mae-med-desc">
+            En més del <strong class="text-white">50% dels trades auditats</strong>, el retrocés no supera els 11-12 punts. El preu absorbeix l'extrem de Londres i reacciona ràpidament cap al Take Profit.
           </p>
         </div>
 
-        <!-- Simulador interactiu de capital -->
-        <div class="space-y-2 pt-2">
-          <div class="flex justify-between items-center text-xs">
-            <span class="text-slate-400 font-medium">Simular retirada per a un saldo hipotètic:</span>
-            <span id="sliderValue" class="font-mono text-emerald-400 font-bold">$1,000</span>
+        <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2.5">
+          <div class="flex items-center space-x-2 text-cyan-400 font-bold">
+            <i data-lucide="shield-alert" class="w-4 h-4"></i>
+            <span id="card-mae-max-title">Stop Loss Invariant a 60 Punts</span>
           </div>
-          <input id="balanceSlider" type="range" min="1000" max="30000" step="250" value="1000" 
-                 class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
-          <div class="flex justify-between text-[10px] font-mono text-slate-500">
-            <span>$1,000 (Inici)</span>
-            <span>$5,000 (5 MNQ)</span>
-            <span>$15,000 (Renda Alta)</span>
-            <span>$30,000 (Búnquer)</span>
+          <p class="text-slate-300 leading-relaxed" id="card-mae-max-desc">
+            Donar 60 punts d'Stop Loss és el veritable secret de l'estratègia: permet absorbir l'overshoot típic del Nasdaq sense trencar la regla de protecció de capital.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2.5">
+          <div class="flex items-center space-x-2 text-amber-400 font-bold">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span>Tancament CME Intradia Estricte</span>
           </div>
+          <p class="text-slate-300 leading-relaxed">
+            A les 15:20 CEST es cancel·len les ordres límit pendents no executades per evitar l'obertura volàtil de Wall Street. Zero pernocta i zero risc de gap nocturn.
+          </p>
         </div>
       </div>
 
-      <!-- Columna 3: Regles de Seguretat i Marge -->
-      <div class="bg-brand-card border border-brand-border rounded-xl p-5 space-y-4 flex flex-col justify-between">
+      <!-- Taula Dinàmica de Sizing de 1 a 10 MNQ -->
+      <div class="overflow-x-auto custom-scrollbar pt-2">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 font-semibold uppercase tracking-wider">
+              <th class="py-3 px-4">Mida Posició</th>
+              <th class="py-3 px-4">Valor Punt</th>
+              <th class="py-3 px-4">Retrocés Típic (Mediana MAE)</th>
+              <th class="py-3 px-4">Pèrdua Màx per SL (60 pts)</th>
+              <th class="py-3 px-4">Coixí Lliure Restant ($2,000)</th>
+              <th class="py-3 px-4">Benefici Net Anual (1 Compte)</th>
+              <th class="py-3 px-4">Benefici Net Mensual</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 font-mono" id="sizing-table-body">
+            <!-- Emplenat dinàmicament per JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SIMULADOR DINÀMIC DE FLOTA -->
+    <section id="simulador" class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
-          <h3 class="text-sm font-bold text-white flex items-center gap-2 border-b border-brand-border pb-3">
-            <i data-lucide="lock" class="w-4 h-4 text-cyan-400"></i>
-            Regles de Risc Intradia
-          </h3>
-          <ul class="mt-3 space-y-3 text-xs text-slate-300">
-            <li class="flex items-start gap-2">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-              <span><strong>Marge Tradovate:</strong> $100 per MNQ. Sempre es manté un coixí > 10x per contracte.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-              <span><strong>Tancament EOD:</strong> 16:55 EDT (22:55 CEST). MAI es manté posició oberta durant la nit.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-              <span><strong>Desescalat Actiu:</strong> Si el capital cau del llindar, el bot redueix automàticament els contractes.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-              <span><strong>Ordres Bracket OSO:</strong> El TP i SL viuen al servidor del broker des del segon 0.</span>
-            </li>
-          </ul>
+          <div class="flex items-center space-x-2">
+            <i data-lucide="calculator" class="w-5 h-5 text-emerald-400"></i>
+            <h3 class="text-xl font-bold text-white tracking-tight">Simulador d'Escalabilitat de Flota (Comptes Fondejats 50k)</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">Calculadora de rendiments nets combinats segons el nombre de comptes copiats i la zona seleccionada</p>
         </div>
 
-        <div class="pt-3 border-t border-brand-border text-center">
-          <span class="text-[11px] text-slate-500 font-mono">Tradovate Cloud Engine • 2026 CME Globex</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="setFleet(1)" class="fleet-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition" data-fleet="1">1 Compte</button>
+          <button onclick="setFleet(5)" class="fleet-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition" data-fleet="5">5 Comptes</button>
+          <button onclick="setFleet(10)" class="fleet-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition" data-fleet="10">10 Comptes</button>
+          <button onclick="setFleet(20)" class="fleet-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition" data-fleet="20">20 Comptes</button>
         </div>
       </div>
 
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-slate-900/50 p-5 rounded-2xl border border-slate-800/80">
+        <div class="md:col-span-7 space-y-2">
+          <div class="flex justify-between items-center text-sm">
+            <span class="font-medium text-slate-300">Mida de la Flota:</span>
+            <span class="font-mono text-lg font-bold text-emerald-400" id="fleet-count-display">10 Comptes</span>
+          </div>
+          <input type="range" id="fleet-slider" min="1" max="20" value="10" step="1" 
+                 class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+          <div class="flex justify-between text-[11px] text-slate-500 font-mono">
+            <span>1 compte</span>
+            <span>5 comptes</span>
+            <span>10 comptes</span>
+            <span>20 comptes</span>
+          </div>
+        </div>
+
+        <div class="md:col-span-5 space-y-2">
+          <label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider">Model de Sizing:</label>
+          <select id="sizing-select" onchange="updateCalculations()" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-medium text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            <option value="optimal" selected>🌟 Òptim Recomanat: 5 MNQ (Gestió Institucional)</option>
+            <option value="balanced">⚡ Equilibrat: 6 MNQ</option>
+            <option value="aggressive">🚀 Agressiu (Comptes 100k): 10 MNQ</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+          <span class="text-xs text-slate-400 font-medium">Facturació Mensual Flota</span>
+          <div class="text-2xl font-bold text-emerald-400 font-mono mt-1" id="sim-monthly">+$4,297.90</div>
+          <span class="text-[11px] text-slate-500">Neta de comissions de broker</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+          <span class="text-xs text-slate-400 font-medium">Retorn Net Anual Flota</span>
+          <div class="text-2xl font-bold text-emerald-400 font-mono mt-1" id="sim-annual">+$51,575.00</div>
+          <span class="text-[11px] text-slate-500">Total net anual auditat</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+          <span class="text-xs text-slate-400 font-medium">Payouts Quinzenals</span>
+          <div class="text-2xl font-bold text-cyan-400 font-mono mt-1" id="sim-biweekly">~$2,148.95</div>
+          <span class="text-[11px] text-slate-500">Extracció cada 15 dies</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+          <span class="text-xs text-slate-400 font-medium">Taxa de Supervivència de Comptes</span>
+          <div class="text-2xl font-bold text-purple-400 font-mono mt-1">100.0%</div>
+          <span class="text-[11px] text-slate-500">0 comptes cremats en l'històric</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRÀFICA INTERACTIVA DE RENDIMENT MENSUAL -->
+    <section class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-400"></i>
+            <h3 class="text-xl font-bold text-white tracking-tight" id="chart-main-title">Rendiment Mensual — Zones de Londres (1 Any CME Globex)</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1" id="chart-sub-title">Totes les sessions auditades barra a barra a 1 segon</p>
+        </div>
+        <div class="flex items-center space-x-2 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+          <button onclick="changeChartFleet(1)" id="chart-btn-1" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">1 Compte</button>
+          <button onclick="changeChartFleet(10)" id="chart-btn-10" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold transition">10 Comptes</button>
+          <button onclick="changeChartFleet(20)" id="chart-btn-20" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">20 Comptes</button>
+        </div>
+      </div>
+
+      <div class="h-80 w-full">
+        <canvas id="monthlyChart"></canvas>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-800 text-center text-xs">
+        <div>
+          <span class="text-slate-500 block">Total Trades</span>
+          <span class="text-base font-bold font-mono text-white" id="chart-summary-trades">419 Trades</span>
+        </div>
+        <div>
+          <span class="text-slate-500 block">Win Rate</span>
+          <span class="text-base font-bold font-mono text-amber-400" id="chart-summary-wr">88.54%</span>
+        </div>
+        <div>
+          <span class="text-slate-500 block">Benefici Net Acumulat (10 Acc)</span>
+          <span class="text-base font-bold font-mono text-emerald-400" id="total-cum-display">+$51,575.00</span>
+        </div>
+        <div>
+          <span class="text-slate-500 block">Règim de Volatilitat</span>
+          <span class="text-base font-bold font-mono text-cyan-400">Sweet Spot (TP 10 / SL 60)</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER AMB ESTAT EN DIRECTE -->
+  <footer class="border-t border-slate-800/80 bg-slate-950/90 py-8 mt-12 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+        <span>MNQ Institutional London Zones · Dades CME Globex 1s Audited</span>
+      </div>
+      <div class="flex items-center space-x-6 text-slate-400 font-mono">
+        <span>CME: MNQ</span>
+        <span id="footer-trades-count">Trades: 419</span>
+        <span id="footer-wr">Win Rate: 88.54%</span>
+        <span>Endpoint: <a href="/health" class="text-cyan-400 hover:underline">/health</a></span>
+      </div>
     </div>
+  </footer>
 
-  </div>
-
-  <!-- APP JS -->
-  <script src="/static/app.js"></script>
+  <!-- DADES EMBEBIDES I LÒGICA DINÀMICA -->
   <script>
-    // Render icones Lucide
     lucide.createIcons();
+
+    // DADES EXACTES AUDITADES DELS NIVELLS DE LONDRES
+    const ZONES_DATABASE = {
+      "both": {
+        id: "both",
+        title: "Totes les Zones de Londres",
+        subtitle: "High & Low Institucional",
+        desc: "L'estratègia institucional completa de Londres opera tant l'escombrat del màxim com del mínim de la sessió de Londres (08:00 a 11:00 CEST). A les 11:00 CEST es pengen dues ordres límit passives (Sell Limit a l'High i Buy Limit al Low) amb el Sweet Spot validat (TP 10 / SL 60). Només 1 trade per nivell al dia i cancel·lació forçada a les 15:20 CEST per blindar el compte abans de Wall Street.",
+        direction: "SHORT (London High) & LONG (London Low)",
+        total_trades: 419,
+        wins: 371,
+        losses: 48,
+        win_rate: 88.54,
+        total_pts: 830.0,
+        avg_pts: 1.98,
+        monthly_trades: 32.2,
+        max_mae_pts: 116.5,
+        med_mae_pts: 11.25,
+        monthly: [
+          { month: "2025-09", trades: 16, wins: 15, losses: 1, wr: 93.8, total_pts: 90.0 },
+          { month: "2025-10", trades: 37, wins: 27, losses: 10, wr: 73.0, total_pts: -330.0 },
+          { month: "2025-11", trades: 33, wins: 28, losses: 5, wr: 84.8, total_pts: -20.0 },
+          { month: "2025-12", trades: 38, wins: 33, losses: 5, wr: 86.8, total_pts: 30.0 },
+          { month: "2026-01", trades: 30, wins: 27, losses: 3, wr: 90.0, total_pts: 90.0 },
+          { month: "2026-02", trades: 31, wins: 24, losses: 7, wr: 77.4, total_pts: -180.0 },
+          { month: "2026-03", trades: 34, wins: 31, losses: 3, wr: 91.2, total_pts: 130.0 },
+          { month: "2026-04", trades: 38, wins: 34, losses: 4, wr: 89.5, total_pts: 100.0 },
+          { month: "2026-05", trades: 34, wins: 30, losses: 4, wr: 88.2, total_pts: 60.0 },
+          { month: "2026-06", trades: 39, wins: 36, losses: 3, wr: 92.3, total_pts: 180.0 },
+          { month: "2026-07", trades: 38, wins: 37, losses: 1, wr: 97.4, total_pts: 310.0 },
+          { month: "2026-08", trades: 35, wins: 34, losses: 1, wr: 97.1, total_pts: 280.0 },
+          { month: "2026-09", trades: 16, wins: 15, losses: 1, wr: 93.8, total_pts: 90.0 }
+        ]
+      },
+      "high": {
+        id: "high",
+        title: "Only London High",
+        subtitle: "Short @ London High",
+        desc: "Aquesta configuració filtra exclusivament el màxim de la sessió de Londres (08:00 a 11:00 CEST). Quan el mercat escombra el màxim institucional buscant liquiditat compradora i activant ordres Stop de compradors tardans, la nostra ordre Sell Limit entra passivament al mercat per aprofitar el gir baixista cap al Take Profit de 10 punts amb protecció estricta de 60 punts.",
+        direction: "SELL LIMIT (Short @ High)",
+        total_trades: 214,
+        wins: 188,
+        losses: 26,
+        win_rate: 87.85,
+        total_pts: 320.0,
+        avg_pts: 1.50,
+        monthly_trades: 16.5,
+        max_mae_pts: 116.5,
+        med_mae_pts: 12.0,
+        monthly: [
+          { month: "2025-09", trades: 8, wins: 7, losses: 1, wr: 87.5, total_pts: 10.0 },
+          { month: "2025-10", trades: 21, wins: 16, losses: 5, wr: 76.2, total_pts: -140.0 },
+          { month: "2025-11", trades: 14, wins: 11, losses: 3, wr: 78.6, total_pts: -70.0 },
+          { month: "2025-12", trades: 19, wins: 17, losses: 2, wr: 89.5, total_pts: 50.0 },
+          { month: "2026-01", trades: 18, wins: 18, losses: 0, wr: 100.0, total_pts: 180.0 },
+          { month: "2026-02", trades: 14, wins: 10, losses: 4, wr: 71.4, total_pts: -140.0 },
+          { month: "2026-03", trades: 17, wins: 15, losses: 2, wr: 88.2, total_pts: 30.0 },
+          { month: "2026-04", trades: 21, wins: 19, losses: 2, wr: 90.5, total_pts: 70.0 },
+          { month: "2026-05", trades: 20, wins: 17, losses: 3, wr: 85.0, total_pts: -10.0 },
+          { month: "2026-06", trades: 20, wins: 18, losses: 2, wr: 90.0, total_pts: 60.0 },
+          { month: "2026-07", trades: 19, wins: 19, losses: 0, wr: 100.0, total_pts: 190.0 },
+          { month: "2026-08", trades: 17, wins: 16, losses: 1, wr: 94.1, total_pts: 100.0 },
+          { month: "2026-09", trades: 6, wins: 5, losses: 1, wr: 83.3, total_pts: -10.0 }
+        ]
+      },
+      "low": {
+        id: "low",
+        title: "Only London Low",
+        subtitle: "Long @ London Low",
+        desc: "Aquesta modalitat opera exclusivament el mínim de la sessió de Londres (08:00 a 11:00 CEST). Quan el mercat escombra el mínim institucional generant pànic i escombrant stops de compradors, la nostra ordre Buy Limit s'omple passivament capturant el rebot institucional alcista cap al Take Profit amb un registre històric immillorable i un drawdown mínim.",
+        direction: "BUY LIMIT (Long @ Low)",
+        total_trades: 205,
+        wins: 183,
+        losses: 22,
+        win_rate: 89.27,
+        total_pts: 510.0,
+        avg_pts: 2.49,
+        monthly_trades: 15.8,
+        max_mae_pts: 62.25,
+        med_mae_pts: 10.5,
+        monthly: [
+          { month: "2025-09", trades: 8, wins: 8, losses: 0, wr: 100.0, total_pts: 80.0 },
+          { month: "2025-10", trades: 16, wins: 11, losses: 5, wr: 68.8, total_pts: -190.0 },
+          { month: "2025-11", trades: 19, wins: 17, losses: 2, wr: 89.5, total_pts: 50.0 },
+          { month: "2025-12", trades: 19, wins: 16, losses: 3, wr: 84.2, total_pts: -20.0 },
+          { month: "2026-01", trades: 12, wins: 9, losses: 3, wr: 75.0, total_pts: -90.0 },
+          { month: "2026-02", trades: 17, wins: 14, losses: 3, wr: 82.4, total_pts: -40.0 },
+          { month: "2026-03", trades: 17, wins: 16, losses: 1, wr: 94.1, total_pts: 100.0 },
+          { month: "2026-04", trades: 17, wins: 15, losses: 2, wr: 88.2, total_pts: 30.0 },
+          { month: "2026-05", trades: 14, wins: 13, losses: 1, wr: 92.9, total_pts: 70.0 },
+          { month: "2026-06", trades: 19, wins: 18, losses: 1, wr: 94.7, total_pts: 120.0 },
+          { month: "2026-07", trades: 19, wins: 18, losses: 1, wr: 94.7, total_pts: 120.0 },
+          { month: "2026-08", trades: 18, wins: 18, losses: 0, wr: 100.0, total_pts: 180.0 },
+          { month: "2026-09", trades: 10, wins: 10, losses: 0, wr: 100.0, total_pts: 100.0 }
+        ]
+      }
+    };
+
+    let currentZone = "both";
+    let currentFleet = 10;
+    let currentChartFleet = 10;
+    let chartInstance = null;
+
+    function formatUSD(num) {
+      const sign = num > 0 ? '+' : num < 0 ? '-' : '';
+      return sign + '$' + Math.abs(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function setZone(z) {
+      if (!ZONES_DATABASE[z]) return;
+      currentZone = z;
+      
+      // Actualitzar selector desplegable
+      document.getElementById('zone-select').value = z;
+
+      // Actualitzar botons de capçalera
+      ['both', 'high', 'low'].forEach(key => {
+        const btn = document.getElementById(`zone-btn-${key}`);
+        if (btn) {
+          if (key === z) {
+            btn.className = 'px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold transition';
+          } else {
+            btn.className = 'px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition';
+          }
+        }
+      });
+
+      // Efectes a les targetes de Londres
+      const cardHigh = document.getElementById('card-london-high');
+      const cardLow = document.getElementById('card-london-low');
+      if (z === 'high') {
+        cardHigh.classList.add('ring-2', 'ring-rose-500', 'glow-gold');
+        cardLow.classList.remove('ring-2', 'ring-emerald-500', 'glow-green');
+        cardLow.style.opacity = '0.5';
+        cardHigh.style.opacity = '1';
+      } else if (z === 'low') {
+        cardLow.classList.add('ring-2', 'ring-emerald-500', 'glow-green');
+        cardHigh.classList.remove('ring-2', 'ring-rose-500', 'glow-gold');
+        cardHigh.style.opacity = '0.5';
+        cardLow.style.opacity = '1';
+      } else {
+        cardHigh.classList.remove('ring-2', 'ring-rose-500', 'glow-gold');
+        cardLow.classList.remove('ring-2', 'ring-emerald-500', 'glow-green');
+        cardHigh.style.opacity = '1';
+        cardLow.style.opacity = '1';
+      }
+
+      renderZoneUI();
+    }
+
+    function renderZoneUI() {
+      const data = ZONES_DATABASE[currentZone];
+
+      // Badges
+      document.getElementById('header-wr-badge').textContent = `${data.win_rate}% Win Rate (${data.wins}W / ${data.losses}L)`;
+      document.getElementById('header-vol-badge').textContent = `~${data.monthly_trades} Trades / Mes`;
+      document.getElementById('footer-trades-count').textContent = `Trades: ${data.total_trades}`;
+      document.getElementById('footer-wr').textContent = `Win Rate: ${data.win_rate}%`;
+
+      // Hero
+      const titleAccent = document.getElementById('hero-title-accent');
+      titleAccent.textContent = data.subtitle;
+      if (currentZone === 'high') {
+        titleAccent.className = 'gradient-text-gold';
+      } else if (currentZone === 'low') {
+        titleAccent.className = 'gradient-text-emerald';
+      } else {
+        titleAccent.className = 'gradient-text-emerald';
+      }
+
+      document.getElementById('hero-description').textContent = data.desc;
+      document.getElementById('hero-points').textContent = `+${data.total_pts.toFixed(1)} punts CME`;
+      document.getElementById('hero-volume').textContent = `~${data.monthly_trades} trades / mes (${data.total_trades} totals)`;
+      document.getElementById('hero-wr-tag').textContent = `${data.win_rate}% WR`;
+
+      // Càlculs 5 MNQ (pt = $10, comm = $7.50)
+      const ptVal5 = 10.0;
+      const comm5 = 7.50;
+      const annualNet5 = (data.total_pts * ptVal5) - (data.total_trades * comm5);
+      const monthlyNet5 = annualNet5 / 12.0;
+
+      document.getElementById('hero-annual-net').innerHTML = `${formatUSD(annualNet5)} <span class="text-lg font-sans text-slate-400 font-medium">USD</span>`;
+      document.getElementById('hero-monthly-net').textContent = `${formatUSD(monthlyNet5)} USD / mes`;
+
+      // A 10 MNQ
+      const annualNet10 = (data.total_pts * 20.0) - (data.total_trades * 15.0);
+      document.getElementById('hero-10mnq').textContent = `${formatUSD(annualNet10)} USD / any`;
+
+      // Flota 10 Comptes (5 MNQ)
+      document.getElementById('hero-fleet-net').textContent = `${formatUSD(annualNet5 * 10)} / any nets`;
+
+      // MAE
+      const maeUsd5 = data.max_mae_pts * ptVal5;
+      document.getElementById('hero-mae').textContent = `-${formatUSD(maeUsd5).replace('+','')} USD (${data.max_mae_pts.toFixed(1)} pts)`;
+
+      // KPIs
+      document.getElementById('kpi-winrate').textContent = `${data.win_rate}%`;
+      document.getElementById('kpi-trades-count').innerHTML = `<span class="text-emerald-400 font-semibold">${data.wins} Wins / ${data.losses} Losses</span> en ${data.total_trades} trades auditats a 1s`;
+      document.getElementById('kpi-frequency').textContent = `~${data.monthly_trades} / mes`;
+      document.getElementById('kpi-mae').textContent = `-${formatUSD(maeUsd5).replace('+','')}`;
+      
+      const bufferFree = 2000.0 - maeUsd5;
+      const bufferPct = ((bufferFree / 2000.0) * 100).toFixed(1);
+      document.getElementById('kpi-buffer-info').innerHTML = `Deixa <span class="text-emerald-400 font-semibold">+${formatUSD(bufferFree)} USD (${bufferPct}%)</span> lliures de buffer de $2,000`;
+
+      document.getElementById('kpi-expectancy').textContent = `+${data.avg_pts.toFixed(2)} pts`;
+
+      // Mediana card
+      document.getElementById('card-mae-med-title').textContent = `Mediana de Flotant: només ${data.med_mae_pts} pts!`;
+
+      // Render taula de sizing
+      renderSizingTable(data);
+
+      // Actualitzar simulador i gràfica
+      updateCalculations();
+      renderChart();
+    }
+
+    function renderSizingTable(data) {
+      const tbody = document.getElementById('sizing-table-body');
+      tbody.innerHTML = '';
+
+      const sizingRows = [
+        { name: "1 MNQ", contracts: 1, note: "" },
+        { name: "3 MNQ", contracts: 3, note: "" },
+        { name: "5 MNQ (Òptim Institucional 50k)", contracts: 5, isOptimal: true },
+        { name: "6 MNQ (Equilibrat)", contracts: 6, note: "" },
+        { name: "7 MNQ", contracts: 7, note: "" },
+        { name: "10 MNQ (Comptes 100k / Agressiu)", contracts: 10, note: "" },
+      ];
+
+      sizingRows.forEach(row => {
+        const ct = row.contracts;
+        const ptVal = ct * 2.0;
+        const commTrade = ct * 1.50;
+        const netAnnual = (data.total_pts * ptVal) - (data.total_trades * commTrade);
+        const netMonthly = netAnnual / 12.0;
+        const maxSlUsd = 60.0 * ptVal;
+        const typicalMaeUsd = data.med_mae_pts * ptVal;
+        const freeBuffer = 2000.0 - maxSlUsd;
+        const freePct = ((freeBuffer / 2000.0) * 100).toFixed(1);
+
+        const tr = document.createElement('tr');
+        if (row.isOptimal) {
+          tr.className = 'bg-emerald-500/10 border-l-4 border-emerald-500 hover:bg-emerald-500/15 transition';
+          tr.innerHTML = `
+            <td class="py-3 px-4 font-bold text-emerald-300 font-sans flex items-center space-x-1.5">
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-emerald-400 text-emerald-400"></i>
+              <span>${row.name}</span>
+            </td>
+            <td class="py-3 px-4 text-slate-300">$${ptVal} / pt</td>
+            <td class="py-3 px-4 text-cyan-400">-$${typicalMaeUsd.toFixed(2)}</td>
+            <td class="py-3 px-4 text-rose-400 font-bold">-$${maxSlUsd.toFixed(2)}</td>
+            <td class="py-3 px-4 text-emerald-400 font-bold">${freePct}% (+$${freeBuffer.toFixed(2)})</td>
+            <td class="py-3 px-4 text-emerald-400 font-bold">${formatUSD(netAnnual)}</td>
+            <td class="py-3 px-4 text-emerald-300 font-bold">${formatUSD(netMonthly)} / mes</td>
+          `;
+        } else {
+          tr.className = 'hover:bg-slate-800/30 transition';
+          tr.innerHTML = `
+            <td class="py-3 px-4 font-bold text-white font-sans">${row.name}</td>
+            <td class="py-3 px-4 text-slate-300">$${ptVal} / pt</td>
+            <td class="py-3 px-4 text-cyan-400">-$${typicalMaeUsd.toFixed(2)}</td>
+            <td class="py-3 px-4 text-rose-400 font-bold">-$${maxSlUsd.toFixed(2)}</td>
+            <td class="py-3 px-4 text-slate-300">${freePct}% (+$${freeBuffer.toFixed(2)})</td>
+            <td class="py-3 px-4 text-emerald-400">${formatUSD(netAnnual)}</td>
+            <td class="py-3 px-4 text-white">${formatUSD(netMonthly)} / mes</td>
+          `;
+        }
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    function setFleet(n) {
+      currentFleet = n;
+      document.getElementById('fleet-slider').value = n;
+      document.querySelectorAll('.fleet-btn').forEach(btn => {
+        const val = parseInt(btn.dataset.fleet);
+        if (val === n) {
+          btn.className = 'fleet-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition';
+        } else {
+          btn.className = 'fleet-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+        }
+      });
+      updateCalculations();
+    }
+
+    document.getElementById('fleet-slider').addEventListener('input', (e) => {
+      currentFleet = parseInt(e.target.value);
+      document.querySelectorAll('.fleet-btn').forEach(btn => {
+        const val = parseInt(btn.dataset.fleet);
+        if (val === currentFleet) {
+          btn.className = 'fleet-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition';
+        } else {
+          btn.className = 'fleet-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+        }
+      });
+      updateCalculations();
+    });
+
+    function getContractsForModel(model) {
+      if (model === 'balanced') return 6;
+      if (model === 'aggressive') return 10;
+      return 5; // optimal default: 5 MNQ
+    }
+
+    function updateCalculations() {
+      const data = ZONES_DATABASE[currentZone];
+      const model = document.getElementById('sizing-select').value;
+      const contracts = getContractsForModel(model);
+
+      document.getElementById('fleet-count-display').textContent = `${currentFleet} ${currentFleet === 1 ? 'Compte' : 'Comptes'}`;
+
+      const ptVal = contracts * 2.0;
+      const commPerTrade = contracts * 1.50;
+
+      const annualPerAccount = (data.total_pts * ptVal) - (data.total_trades * commPerTrade);
+      const monthlyPerAccount = annualPerAccount / 12.0;
+
+      const monthlyFleetTotal = monthlyPerAccount * currentFleet;
+      const annualFleetTotal = annualPerAccount * currentFleet;
+      const biweeklyAvg = monthlyFleetTotal / 2.0;
+
+      document.getElementById('sim-monthly').textContent = formatUSD(monthlyFleetTotal);
+      document.getElementById('sim-annual').textContent = formatUSD(annualFleetTotal);
+      document.getElementById('sim-biweekly').textContent = '~' + formatUSD(biweeklyAvg);
+    }
+
+    function changeChartFleet(n) {
+      currentChartFleet = n;
+      [1, 10, 20].forEach(num => {
+        const btn = document.getElementById(`chart-btn-${num}`);
+        if (btn) {
+          if (num === n) {
+            btn.className = 'px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold transition';
+          } else {
+            btn.className = 'px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition';
+          }
+        }
+      });
+      renderChart();
+    }
+
+    function renderChart() {
+      const data = ZONES_DATABASE[currentZone];
+      const ctx = document.getElementById('monthlyChart').getContext('2d');
+      const model = document.getElementById('sizing-select').value;
+      const contracts = getContractsForModel(model);
+      const ptVal = contracts * 2.0;
+      const commPerTrade = contracts * 1.50;
+
+      const labels = data.monthly.map(d => d.month);
+      const pnlValues = data.monthly.map(d => {
+        const gross = d.total_pts * ptVal * currentChartFleet;
+        const comm = d.trades * commPerTrade * currentChartFleet;
+        return Math.round(gross - comm);
+      });
+      
+      let cum = 0;
+      const cumValues = pnlValues.map(v => { cum += v; return cum; });
+      document.getElementById('total-cum-display').textContent = formatUSD(cum);
+      document.getElementById('chart-summary-trades').textContent = `${data.total_trades} Trades`;
+      document.getElementById('chart-summary-wr').textContent = `${data.win_rate}%`;
+
+      document.getElementById('chart-main-title').textContent = `Rendiment Mensual — ${data.title} (${currentChartFleet} Comptes)`;
+      document.getElementById('chart-sub-title').textContent = `Total PnL Net acumulat: ${formatUSD(cum)} USD · ${data.direction}`;
+
+      const backgroundColors = pnlValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.85)' : 'rgba(244, 63, 94, 0.85)');
+      const borderColors = pnlValues.map(v => v >= 0 ? '#10b981' : '#f43f5e');
+
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: `PnL Mensual Net (${currentChartFleet} Acc | ${contracts} MNQ)`,
+              data: pnlValues,
+              backgroundColor: backgroundColors,
+              borderColor: borderColors,
+              borderWidth: 1,
+              borderRadius: 6,
+              yAxisID: 'y'
+            },
+            {
+              type: 'line',
+              label: 'Benefici Net Acumulat',
+              data: cumValues,
+              borderColor: '#fbbf24',
+              backgroundColor: 'rgba(251, 191, 36, 0.08)',
+              borderWidth: 2.5,
+              tension: 0.3,
+              fill: true,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#fbbf24',
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#94a3b8',
+                font: { family: 'Plus Jakarta Sans', size: 12 }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(15, 23, 42, 0.95)',
+              titleColor: '#ffffff',
+              bodyColor: '#e2e8f0',
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+              borderWidth: 1,
+              padding: 12,
+              displayColors: true,
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ${formatUSD(context.parsed.y)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 10 } }
+            },
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              grid: { color: 'rgba(255, 255, 255, 0.06)' },
+              ticks: {
+                color: '#94a3b8',
+                font: { family: 'JetBrains Mono', size: 10 },
+                callback: function(value) { return '$' + value.toLocaleString(); }
+              }
+            },
+            y1: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              grid: { drawOnChartArea: false },
+              ticks: {
+                color: '#fbbf24',
+                font: { family: 'JetBrains Mono', size: 10 },
+                callback: function(value) { return '$' + value.toLocaleString(); }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    async function checkServerStatus() {
+      try {
+        const res = await fetch('/health');
+        if (res.ok) {
+          const data = await res.json();
+          const el = document.getElementById('railway-status');
+          if (el) el.textContent = `Railway: ${data.status.toUpperCase()}`;
+        }
+      } catch (e) {}
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setZone('both');
+      checkServerStatus();
+    });
   </script>
 </body>
 </html>

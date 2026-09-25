@@ -36,6 +36,25 @@ app.add_middleware(
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
+@app.get("/health")
+def health_check():
+    import datetime
+    return {
+        "status": "online",
+        "service": "MNQ Institutional London Zones Dashboard",
+        "strategy": "London Zones Only",
+        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()
+    }
+
+@app.get("/api/london-zones")
+def get_london_zones():
+    import json
+    json_path = STATIC_DIR / "london_zones_data.json"
+    if json_path.exists():
+        with open(json_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
 # 1. API: Estat del Broker en Temps Real
 @app.get("/api/status")
 def get_live_status():
