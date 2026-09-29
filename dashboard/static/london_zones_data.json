@@ -2,9 +2,375 @@
   "both": {
     "id": "both",
     "title": "Totes les Zones de Londres",
-    "subtitle": "High & Low Institucional (11:00 a 15:20 CEST)",
-    "desc": "L'estratègia reina institucional del projecte. Opera tant el màxim com el mínim establerts a la sessió de Londres (08:00 a 11:00 CEST). A les 11:00 CEST es pengen dues ordres límit passives (Sell Limit a l'High i Buy Limit al Low) amb el filtre macro institucional (sense dies d'alta volatilitat) i tall estricte a les 15:20 CEST (abans de Wall Street). Amb un 87.73% de Win Rate auditat a 1 segon de CME Globex (193W / 27L) i 12 de 13 mesos en positiu.",
-    "direction": "SHORT (London High) & LONG (London Low)",
+    "subtitle": "Model Millorat: Sweep Offset +2.0 pts (11:00 a 15:20 CEST)",
+    "desc": "L'estratègia reina institucional del projecte amb el Model Millorat de Sweep (+2.0 pts). En comptes de penjar l'ordre límit al tick exacte de la línia, s'introdueix un offset de +2.0 punts (Sell Limit a London High + 2 i Buy Limit a London Low - 2) per aprofitar l'escombrada de liquiditat inicial (sweep wick). Això permet entrar a un preu superior, assolir el Take Profit de 14 punts gairebé 2 minuts més ràpid i salvar 5 Stop Loss complets, aconseguint un 88.84% de Win Rate auditat a 1 segon de CME Globex (191W / 24L) i +1,234.0 punts nets.",
+    "direction": "SHORT (London High + 2) & LONG (London Low - 2)",
+    "total_trades": 215,
+    "wins": 191,
+    "losses": 24,
+    "win_rate": 88.84,
+    "total_pts": 1234.0,
+    "avg_pts": 5.74,
+    "monthly_trades": 16.5,
+    "max_mae_pts": 60.75,
+    "med_mae_pts": 11.5,
+    "monthly": [
+      {
+        "month": "2025-09",
+        "trades": 13,
+        "wins": 12,
+        "losses": 1,
+        "wr": 92.3,
+        "total_pts": 108.0
+      },
+      {
+        "month": "2025-10",
+        "trades": 16,
+        "wins": 13,
+        "losses": 3,
+        "wr": 81.2,
+        "total_pts": 2.0
+      },
+      {
+        "month": "2025-11",
+        "trades": 15,
+        "wins": 13,
+        "losses": 2,
+        "wr": 86.7,
+        "total_pts": 62.0
+      },
+      {
+        "month": "2025-12",
+        "trades": 16,
+        "wins": 13,
+        "losses": 3,
+        "wr": 81.2,
+        "total_pts": 2.0
+      },
+      {
+        "month": "2026-01",
+        "trades": 13,
+        "wins": 13,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 182.0
+      },
+      {
+        "month": "2026-02",
+        "trades": 16,
+        "wins": 14,
+        "losses": 2,
+        "wr": 87.5,
+        "total_pts": 76.0
+      },
+      {
+        "month": "2026-03",
+        "trades": 18,
+        "wins": 16,
+        "losses": 2,
+        "wr": 88.9,
+        "total_pts": 104.0
+      },
+      {
+        "month": "2026-04",
+        "trades": 26,
+        "wins": 22,
+        "losses": 4,
+        "wr": 84.6,
+        "total_pts": 68.0
+      },
+      {
+        "month": "2026-05",
+        "trades": 17,
+        "wins": 14,
+        "losses": 3,
+        "wr": 82.4,
+        "total_pts": 16.0
+      },
+      {
+        "month": "2026-06",
+        "trades": 19,
+        "wins": 16,
+        "losses": 3,
+        "wr": 84.2,
+        "total_pts": 44.0
+      },
+      {
+        "month": "2026-07",
+        "trades": 22,
+        "wins": 22,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 308.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 15,
+        "wins": 14,
+        "losses": 1,
+        "wr": 93.3,
+        "total_pts": 136.0
+      },
+      {
+        "month": "2026-09",
+        "trades": 9,
+        "wins": 9,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 126.0
+      }
+    ]
+  },
+  "high": {
+    "id": "high",
+    "title": "Only London High",
+    "subtitle": "Model Millorat: Sell Limit @ High + 2.0 pts (05h a 09:20 EDT)",
+    "desc": "Opera exclusivament el màxim de la sessió de Londres (08:00 a 11:00 CEST) amb el Model Millorat de Sweep (+2.0 punts). L'ordre Sell Limit entra 2 punts per sobre de la zona quan el preu escombra els stops de compradors tardans, capturant el gir baixista amb un 86.61% de Win Rate (97W / 15L), +458.0 punts nets CME i una execució al Take Profit significativament més ràpida.",
+    "direction": "SELL LIMIT (Short @ High + 2.0)",
+    "total_trades": 112,
+    "wins": 97,
+    "losses": 15,
+    "win_rate": 86.61,
+    "total_pts": 458.0,
+    "avg_pts": 4.09,
+    "monthly_trades": 8.6,
+    "max_mae_pts": 61.47,
+    "med_mae_pts": 12.25,
+    "monthly": [
+      {
+        "month": "2025-09",
+        "trades": 8,
+        "wins": 8,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 112.0
+      },
+      {
+        "month": "2025-10",
+        "trades": 10,
+        "wins": 8,
+        "losses": 2,
+        "wr": 80.0,
+        "total_pts": -8.0
+      },
+      {
+        "month": "2025-11",
+        "trades": 6,
+        "wins": 5,
+        "losses": 1,
+        "wr": 83.3,
+        "total_pts": 10.0
+      },
+      {
+        "month": "2025-12",
+        "trades": 10,
+        "wins": 7,
+        "losses": 3,
+        "wr": 70.0,
+        "total_pts": -82.0
+      },
+      {
+        "month": "2026-01",
+        "trades": 9,
+        "wins": 9,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 126.0
+      },
+      {
+        "month": "2026-02",
+        "trades": 7,
+        "wins": 7,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 98.0
+      },
+      {
+        "month": "2026-03",
+        "trades": 10,
+        "wins": 8,
+        "losses": 2,
+        "wr": 80.0,
+        "total_pts": -8.0
+      },
+      {
+        "month": "2026-04",
+        "trades": 15,
+        "wins": 13,
+        "losses": 2,
+        "wr": 86.7,
+        "total_pts": 62.0
+      },
+      {
+        "month": "2026-05",
+        "trades": 8,
+        "wins": 6,
+        "losses": 2,
+        "wr": 75.0,
+        "total_pts": -36.0
+      },
+      {
+        "month": "2026-06",
+        "trades": 10,
+        "wins": 8,
+        "losses": 2,
+        "wr": 80.0,
+        "total_pts": -8.0
+      },
+      {
+        "month": "2026-07",
+        "trades": 11,
+        "wins": 11,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 154.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 6,
+        "wins": 5,
+        "losses": 1,
+        "wr": 83.3,
+        "total_pts": 10.0
+      },
+      {
+        "month": "2026-09",
+        "trades": 2,
+        "wins": 2,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 28.0
+      }
+    ]
+  },
+  "low": {
+    "id": "low",
+    "title": "Only London Low",
+    "subtitle": "Model Millorat: Buy Limit @ Low - 2.0 pts (05h a 09:20 EDT)",
+    "desc": "Opera exclusivament el mínim de la sessió de Londres (08:00 a 11:00 CEST) amb el Model Millorat de Sweep (-2.0 punts). Quan el preu trenca a la baixa per escombrar liquiditat de venda, la nostra ordre Buy Limit s'omple 2 punts per sota del rang capturant el rebot institucional alcista cap al Take Profit amb un espectacular 91.26% de Win Rate (94W / 9L) i +776.0 punts nets (+7,052.50 USD a 5 MNQ).",
+    "direction": "BUY LIMIT (Long @ Low - 2.0)",
+    "total_trades": 103,
+    "wins": 94,
+    "losses": 9,
+    "win_rate": 91.26,
+    "total_pts": 776.0,
+    "avg_pts": 7.53,
+    "monthly_trades": 7.9,
+    "max_mae_pts": 60.22,
+    "med_mae_pts": 11.0,
+    "monthly": [
+      {
+        "month": "2025-09",
+        "trades": 5,
+        "wins": 4,
+        "losses": 1,
+        "wr": 80.0,
+        "total_pts": -4.0
+      },
+      {
+        "month": "2025-10",
+        "trades": 6,
+        "wins": 5,
+        "losses": 1,
+        "wr": 83.3,
+        "total_pts": 10.0
+      },
+      {
+        "month": "2025-11",
+        "trades": 9,
+        "wins": 8,
+        "losses": 1,
+        "wr": 88.9,
+        "total_pts": 52.0
+      },
+      {
+        "month": "2025-12",
+        "trades": 6,
+        "wins": 6,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 84.0
+      },
+      {
+        "month": "2026-01",
+        "trades": 4,
+        "wins": 4,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 56.0
+      },
+      {
+        "month": "2026-02",
+        "trades": 9,
+        "wins": 7,
+        "losses": 2,
+        "wr": 77.8,
+        "total_pts": -22.0
+      },
+      {
+        "month": "2026-03",
+        "trades": 8,
+        "wins": 8,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 112.0
+      },
+      {
+        "month": "2026-04",
+        "trades": 11,
+        "wins": 9,
+        "losses": 2,
+        "wr": 81.8,
+        "total_pts": 6.0
+      },
+      {
+        "month": "2026-05",
+        "trades": 9,
+        "wins": 8,
+        "losses": 1,
+        "wr": 88.9,
+        "total_pts": 52.0
+      },
+      {
+        "month": "2026-06",
+        "trades": 9,
+        "wins": 8,
+        "losses": 1,
+        "wr": 88.9,
+        "total_pts": 52.0
+      },
+      {
+        "month": "2026-07",
+        "trades": 11,
+        "wins": 11,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 154.0
+      },
+      {
+        "month": "2026-08",
+        "trades": 9,
+        "wins": 9,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 126.0
+      },
+      {
+        "month": "2026-09",
+        "trades": 7,
+        "wins": 7,
+        "losses": 0,
+        "wr": 100.0,
+        "total_pts": 98.0
+      }
+    ]
+  },
+  "both_classic": {
+    "id": "both_classic",
+    "title": "Totes les Zones (Model Clàssic)",
+    "subtitle": "Entrada exacta a la línia 0.0 pts (TP 14 / SL 60)",
+    "desc": "Model tradicional de l'estratègia amb ordres límit al tick exacte de London High i London Low. 87.73% de Win Rate (186W / 26L) i +1,082.0 punts nets.",
+    "direction": "SHORT @ London High & LONG @ London Low",
     "total_trades": 220,
     "wins": 193,
     "losses": 27,
@@ -12,8 +378,8 @@
     "total_pts": 1082.0,
     "avg_pts": 4.92,
     "monthly_trades": 16.9,
-    "max_mae_pts": 18.5,
-    "med_mae_pts": 5.25,
+    "max_mae_pts": 60.76,
+    "med_mae_pts": 14.0,
     "monthly": [
       {
         "month": "2025-09",
@@ -121,12 +487,12 @@
       }
     ]
   },
-  "high": {
-    "id": "high",
-    "title": "Only London High",
-    "subtitle": "Sell Limit @ London High (05h a 09:20 EDT)",
-    "desc": "Opera exclusivament el màxim de la sessió de Londres (08:00 a 11:00 CEST) amb tall estricte a les 15:20 CEST i filtre macro. Quan el mercat escombra el màxim institucional buscant liquiditat compradora abans de l'obertura americana, la nostra ordre Sell Limit entra passivament per aprofitar el gir baixista cap al Take Profit de 14 punts amb protecció estricta de 60 punts.",
-    "direction": "SELL LIMIT (Short @ High)",
+  "high_classic": {
+    "id": "high_classic",
+    "title": "Only London High (Clàssic)",
+    "subtitle": "Sell Limit al tick exacte London High (TP 14 / SL 60)",
+    "desc": "Model clàssic sense offset sobre el màxim de Londres. 86.09% de Win Rate (99W / 16L) i +426.0 punts nets.",
+    "direction": "SELL LIMIT @ London High",
     "total_trades": 115,
     "wins": 99,
     "losses": 16,
@@ -134,8 +500,8 @@
     "total_pts": 426.0,
     "avg_pts": 3.7,
     "monthly_trades": 8.8,
-    "max_mae_pts": 19.0,
-    "med_mae_pts": 5.5,
+    "max_mae_pts": 61.0,
+    "med_mae_pts": 14.25,
     "monthly": [
       {
         "month": "2025-09",
@@ -243,12 +609,12 @@
       }
     ]
   },
-  "low": {
-    "id": "low",
-    "title": "Only London Low",
-    "subtitle": "Buy Limit @ London Low (05h a 09:20 EDT)",
-    "desc": "Opera exclusivament el mínim de la sessió de Londres (08:00 a 11:00 CEST) amb tall estricte a les 15:20 CEST i filtre macro. Quan el mercat escombra el mínim institucional generant pànic i escombrant stops de compradors, la nostra ordre Buy Limit s'omple passivament capturant el rebot institucional alcista cap al Take Profit amb un destacat 89.52% de Win Rate (94W / 11L).",
-    "direction": "BUY LIMIT (Long @ Low)",
+  "low_classic": {
+    "id": "low_classic",
+    "title": "Only London Low (Clàssic)",
+    "subtitle": "Buy Limit al tick exacte London Low (TP 14 / SL 60)",
+    "desc": "Model clàssic sense offset sobre el mínim de Londres. 89.52% de Win Rate (94W / 11L) i +656.0 punts nets.",
+    "direction": "BUY LIMIT @ London Low",
     "total_trades": 105,
     "wins": 94,
     "losses": 11,
@@ -256,8 +622,8 @@
     "total_pts": 656.0,
     "avg_pts": 6.25,
     "monthly_trades": 8.1,
-    "max_mae_pts": 18.0,
-    "med_mae_pts": 5.0,
+    "max_mae_pts": 60.7,
+    "med_mae_pts": 13.5,
     "monthly": [
       {
         "month": "2025-09",
