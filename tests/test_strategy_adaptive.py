@@ -11,6 +11,7 @@ from bot.config import config
 class TestAdaptiveStrategy(unittest.TestCase):
     def setUp(self):
         self.strat = LondonZonesStrategy()
+        config.enable_trading = True
 
     @patch("bot.strategy.tradovate_client")
     @patch("bot.strategy.risk_manager")
