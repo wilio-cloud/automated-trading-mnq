@@ -27,6 +27,7 @@ class BotConfig:
     symbol_base: str = os.getenv("SYMBOL_BASE", "MNQ")
     tp_points: float = float(os.getenv("TP_POINTS", "14.0"))
     sl_points: float = float(os.getenv("SL_POINTS", "60.0"))
+    london_low_offset_points: float = float(os.getenv("LONDON_LOW_OFFSET_POINTS", "2.0"))
     max_daily_trades: int = int(os.getenv("MAX_DAILY_TRADES", "1"))
     tick_size: float = 0.25
     point_value: float = 2.0  # 1 punt MNQ = $2 USD

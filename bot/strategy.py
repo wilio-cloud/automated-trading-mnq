@@ -205,8 +205,9 @@ class LondonZonesStrategy:
         short_tp = round(short_entry - dynamic_tp, 2)
         short_sl = round(short_entry + dynamic_sl, 2)
 
-        # Zona Baixa Londres: Buy Limit @ Low
-        long_entry = self.london_low
+        # Zona Baixa Londres: Buy Limit @ Low (Model Millorat Sweep Offset 2.0 pts)
+        long_offset = getattr(config, 'london_low_offset_points', 2.0)
+        long_entry = round(self.london_low - long_offset, 2)
         long_tp = round(long_entry + dynamic_tp, 2)
         long_sl = round(long_entry - dynamic_sl, 2)
 
