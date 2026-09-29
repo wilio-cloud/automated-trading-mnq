@@ -212,6 +212,7 @@ def get_macro_status():
         "discord_configured": bool(config.discord_webhook_url)
     }
 
+@app.get("/api/macro/send-now")
 @app.post("/api/macro/send-now")
 def trigger_macro_briefing(force: bool = False):
     tz_madrid = pytz.timezone("Europe/Madrid")
