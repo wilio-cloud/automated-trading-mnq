@@ -73,72 +73,15 @@ MACRO_EVENTS = {
     "2027-12-25": {"type": "HOLIDAY", "severity": "GRAY", "name": "Nadal", "time_cest": "Tot el dia", "instructions": "CME Globex tancat."}
 }
 
-def is_monthly_opex(dt: datetime.date) -> bool:
-    """El tercer divendres de cada mes sempre cau entre el dia 15 i el dia 21."""
-    return dt.weekday() == 4 and 15 <= dt.day <= 21
-
-def is_quarter_end(dt: datetime.date) -> bool:
-    """Últims dies de Març, Juny, Setembre i Desembre (dies 29 a 31)."""
-    return dt.month in (3, 6, 9, 12) and dt.day >= 29
-
-def is_jackson_hole(dt: datetime.date) -> bool:
-    """Simposi de la Fed a Jackson Hole (dies 22 a 28 d'agost)."""
-    return dt.month == 8 and 22 <= dt.day <= 28
-
-def is_post_holiday_low_liquidity(dt: datetime.date) -> bool:
-    """Jornades immediatament posteriors a grans festius amb volum reduït."""
-    return (dt.month == 1 and dt.day in (2, 3)) or (dt.month == 7 and dt.day in (5, 6, 7))
-
 def get_macro_event_for_date(target_date: Optional[datetime.date] = None) -> Optional[Dict[str, Any]]:
     """
-    Retorna la informació de l'esdeveniment macro si la data indicada està al calendari
-    o coincideix amb un filtre estructural (OpEx, Quarter-End, Jackson Hole).
+    Retorna la informació de l'esdeveniment macro si la data indicada està al calendari.
     """
     if target_date is None:
         target_date = datetime.date.today()
         
     date_key = target_date.strftime("%Y-%m-%d")
-    if date_key in MACRO_EVENTS:
-        return MACRO_EVENTS[date_key]
-
-    # Filtres estructurals automàtics (invariants anuals)
-    if is_monthly_opex(target_date):
-        return {
-            "type": "OPEX",
-            "severity": "AMBER",
-            "name": "Venciment Mensual d'Opcions (OpEx - 3r Divendres)",
-            "time_cest": "Tot el dia",
-            "instructions": "Expiració mensual de contractes de derivats CME. Filtre anti-ruïna activat."
-        }
-
-    if is_quarter_end(target_date):
-        return {
-            "type": "REBALANCING",
-            "severity": "AMBER",
-            "name": "Final de Trimestre (Quarter-End Rebalancing)",
-            "time_cest": "Tot el dia",
-            "instructions": "Reequilibri massiu de carteres per fons de pensions i institucionals."
-        }
-
-    if is_jackson_hole(target_date):
-        return {
-            "type": "FOMC",
-            "severity": "RED",
-            "name": "Simposi Econòmic Jackson Hole",
-            "time_cest": "Tot el dia",
-            "instructions": "Intervenció de política monetària dels bancs centrals."
-        }
-
-    if is_post_holiday_low_liquidity(target_date):
-        return {
-            "type": "HOLIDAY",
-            "severity": "GRAY",
-            "name": "Sessió Post-Festiva (Baixa Liquiditat)",
-            "time_cest": "Tot el dia",
-            "instructions": "Volum institucional deprimit post-festiu."
-        }
-
-    return None
+    return MACRO_EVENTS.get(date_key, None)
 
 def get_day_trading_status(target_date: Optional[datetime.date] = None) -> Dict[str, Any]:
     """
