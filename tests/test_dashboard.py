@@ -77,6 +77,17 @@ class TestDashboard(unittest.TestCase):
         self.assertIn("high", r_zones.json())
         self.assertIn("low", r_zones.json())
 
+        # GET /api/macro/status
+        r_macro = self.client.get("/api/macro/status")
+        self.assertEqual(r_macro.status_code, 200)
+        self.assertIn("trading_status", r_macro.json())
+        self.assertIn("badge", r_macro.json())
+
+        # POST /api/macro/send-now
+        r_send = self.client.post("/api/macro/send-now")
+        self.assertEqual(r_send.status_code, 200)
+        self.assertIn("sent", r_send.json())
+
         # GET / (Index HTML)
         r_index = self.client.get("/")
         self.assertEqual(r_index.status_code, 200)

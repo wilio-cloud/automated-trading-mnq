@@ -49,7 +49,7 @@ def generate_and_send_briefing(target_date: Optional[datetime.date] = None, is_s
             f"⏰ **Finestra Operativa**: `11:00 a 15:20 CEST` (05:00 a 09:20 EDT)\n"
             f"🎯 **Setup**: Rebuig a Màxim / Mínim de Londres (Màx. 1 Trade)\n"
             f"🛡️ **Bracket OSO**: TP `+{config.tp_points:.0f} pts` (+${config.tp_points*2:.0f}/ct) | SL `-{config.sl_points:.0f} pts` (-${config.sl_points*2:.0f}/ct)\n"
-            f"📊 **Mètrica Institucional**: 86.30% WR auditat a 1s (CME Globex)"
+            f"📊 **Mètrica Institucional**: 87.73% WR auditat a 1s (CME Globex)"
         )
     else:
         desc = (
