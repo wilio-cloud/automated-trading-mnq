@@ -31,14 +31,14 @@ class TestAdaptiveStrategy(unittest.TestCase):
         now = datetime.datetime(2026, 9, 15, 5, 5, tzinfo=self.strat.tz)
         self.strat.on_london_close(now)
         
-        # Comprovar crida de short bracket: entry=18500, tp=18492 (-8 pts), sl=18500 + config.sl_points
+        # Comprovar crida de short bracket: entry=18502 (+2 offset), tp=18502 - 12.0 = 18490, sl=18502 + 80.0 = 18582
         mock_client.place_bracket_order.assert_any_call(
             symbol=self.strat.active_symbol,
             action="Sell",
             qty=5,
-            entry_price=18500.0,
-            tp_price=18492.0,
-            sl_price=18500.0 + config.sl_points
+            entry_price=18502.0,
+            tp_price=18490.0,
+            sl_price=18582.0
         )
 
     @patch("bot.strategy.tradovate_client")
@@ -53,7 +53,7 @@ class TestAdaptiveStrategy(unittest.TestCase):
         mock_risk_mgr.calculate_contracts.return_value = 5
         mock_risk_mgr.validate_margin.return_value = True
         
-        # NQ a 29.000 pts (>= 21.000) -> Ha d'aplicar TP dinàmic (config.tp_points)
+        # NQ a 29.000 pts (>= 21.000) -> Aplica brackets optimitzats (High: TP 12 / SL 80)
         mock_zone_calc.calculate_london_range.return_value = (29100.0, 29000.0)
         
         now = datetime.datetime(2026, 9, 15, 5, 5, tzinfo=self.strat.tz)
@@ -63,9 +63,9 @@ class TestAdaptiveStrategy(unittest.TestCase):
             symbol=self.strat.active_symbol,
             action="Sell",
             qty=5,
-            entry_price=29100.0,
-            tp_price=round(29100.0 - config.tp_points, 2),
-            sl_price=29100.0 + config.sl_points
+            entry_price=29102.0,
+            tp_price=29090.0,
+            sl_price=29182.0
         )
 
     @patch("bot.strategy.tradovate_client")

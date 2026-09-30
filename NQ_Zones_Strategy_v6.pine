@@ -10,8 +10,14 @@ strategy("NQ Zones Reversal Strategy [Sweet Spot]", shorttitle="NQ Zones Strat",
 // INPUTS & RISK:REWARD CONFIGURATION
 // ============================================
 grp_rr = "Risk : Reward (Sweet Spot Settings)"
-tpPoints = input.float(10.0, "Take Profit (points)", minval=1.0, step=0.5, group=grp_rr, tooltip="Punts de Take Profit. Recomanat Sweet Spot: 8 a 12 punts.")
-slPoints = input.float(60.0, "Stop Loss (points)", minval=5.0, step=1.0, group=grp_rr, tooltip="Punts de Stop Loss. Recomanat Sweet Spot: 50 a 60 punts.")
+londonHighTpPoints = input.float(12.0, "London High TP (pts)", minval=1.0, step=0.5, group=grp_rr, tooltip="Take Profit per a London High (Short). Sweet Spot Validat: 12 punts.")
+londonHighSlPoints = input.float(80.0, "London High SL (pts)", minval=5.0, step=1.0, group=grp_rr, tooltip="Stop Loss per a London High (Short). Sweet Spot Validat: 80 punts.")
+londonLowTpPoints  = input.float(14.0, "London Low TP (pts)", minval=1.0, step=0.5, group=grp_rr, tooltip="Take Profit per a London Low (Long). Model Validat: 14 punts.")
+londonLowSlPoints  = input.float(60.0, "London Low SL (pts)", minval=5.0, step=1.0, group=grp_rr, tooltip="Stop Loss per a London Low (Long). Model Validat: 60 punts.")
+sweepOffset        = input.float(2.0, "Sweep Offset (pts)", minval=0.0, step=0.25, group=grp_rr, tooltip="Offset d'entrada per sobre/sota de la zona. Recomanat: 2.0 punts.")
+
+asiaTpPoints       = input.float(10.0, "Asia TP (pts)", minval=1.0, step=0.5, group=grp_rr)
+asiaSlPoints       = input.float(60.0, "Asia SL (pts)", minval=5.0, step=1.0, group=grp_rr)
 
 grp_sessions = "Sessions & Zones Selection"
 tradeAsia = input.bool(true, "Trade Asia Zones (High & Low)", group=grp_sessions)
@@ -107,8 +113,8 @@ if tradeAsia and tradingWindow and not na(asiaH_prev) and not na(asiaL_prev)
         if high >= asiaH_prev
             strategy.entry("Asia_H_Short", strategy.short, limit=asiaH_prev)
             strategy.exit("TP/SL Asia H", "Asia_H_Short", 
-                          limit=asiaH_prev - tpPoints, 
-                          stop=asiaH_prev + slPoints)
+                          limit=asiaH_prev - asiaTpPoints, 
+                          stop=asiaH_prev + asiaSlPoints)
             asiaTradedH := true
 
     // Asia Low (LONG)
@@ -116,31 +122,38 @@ if tradeAsia and tradingWindow and not na(asiaH_prev) and not na(asiaL_prev)
         if low <= asiaL_prev
             strategy.entry("Asia_L_Long", strategy.long, limit=asiaL_prev)
             strategy.exit("TP/SL Asia L", "Asia_L_Long", 
-                          limit=asiaL_prev + tpPoints, 
-                          stop=asiaL_prev - slPoints)
+                          limit=asiaL_prev + asiaTpPoints, 
+                          stop=asiaL_prev - asiaSlPoints)
             asiaTradedL := true
 
-// 2. Ordres London (actives des de 05:00 fins a 16:55)
-bool postLondonWindow = tradingWindow and (currentHour >= 5)
+// 2. Ordres London Zones Pro (actives des de 05:00 fins a 09:20 NY / 15:20 CEST)
+bool inLondonEntryWindow = tradingWindow and (currentHour >= 5) and (currentHour < 9 or (currentHour == 9 and currentMin < 20))
 
-if tradeLondon and postLondonWindow and not na(londonH_prev) and not na(londonL_prev)
-    // London High (SHORT)
+if tradeLondon and inLondonEntryWindow and not na(londonH_prev) and not na(londonL_prev)
+    // London High (SHORT @ High + sweepOffset)
+    float entryH = londonH_prev + sweepOffset
     if not londonTradedH
-        if high >= londonH_prev
-            strategy.entry("London_H_Short", strategy.short, limit=londonH_prev)
+        if high >= entryH
+            strategy.entry("London_H_Short", strategy.short, limit=entryH)
             strategy.exit("TP/SL London H", "London_H_Short", 
-                          limit=londonH_prev - tpPoints, 
-                          stop=londonH_prev + slPoints)
+                          limit=entryH - londonHighTpPoints, 
+                          stop=entryH + londonHighSlPoints)
             londonTradedH := true
 
-    // London Low (LONG)
+    // London Low (LONG @ Low - sweepOffset)
+    float entryL = londonL_prev - sweepOffset
     if not londonTradedL
-        if low <= londonL_prev
-            strategy.entry("London_L_Long", strategy.long, limit=londonL_prev)
+        if low <= entryL
+            strategy.entry("London_L_Long", strategy.long, limit=entryL)
             strategy.exit("TP/SL London L", "London_L_Long", 
-                          limit=londonL_prev + tpPoints, 
-                          stop=londonL_prev - slPoints)
+                          limit=entryL + londonLowTpPoints, 
+                          stop=entryL - londonLowSlPoints)
             londonTradedL := true
+
+// Cutoff London a les 09:20 EDT (Cancel·lar ordres pendents de Londres abans de NY Open)
+if currentHour == 9 and currentMin >= 20 and currentHour[1] == 9 and currentMin[1] < 20
+    strategy.cancel("London_H_Short")
+    strategy.cancel("London_L_Long")
 
 // Tancament a final de dia (EOD 16:55)
 if isEOD

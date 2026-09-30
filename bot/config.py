@@ -27,6 +27,11 @@ class BotConfig:
     symbol_base: str = os.getenv("SYMBOL_BASE", "MNQ")
     tp_points: float = float(os.getenv("TP_POINTS", "14.0"))
     sl_points: float = float(os.getenv("SL_POINTS", "60.0"))
+    london_high_tp_points: float = float(os.getenv("LONDON_HIGH_TP_POINTS", "12.0"))
+    london_high_sl_points: float = float(os.getenv("LONDON_HIGH_SL_POINTS", "80.0"))
+    london_high_offset_points: float = float(os.getenv("LONDON_HIGH_OFFSET_POINTS", "2.0"))
+    london_low_tp_points: float = float(os.getenv("LONDON_LOW_TP_POINTS", "14.0"))
+    london_low_sl_points: float = float(os.getenv("LONDON_LOW_SL_POINTS", "60.0"))
     london_low_offset_points: float = float(os.getenv("LONDON_LOW_OFFSET_POINTS", "2.0"))
     max_daily_trades: int = int(os.getenv("MAX_DAILY_TRADES", "1"))
     tick_size: float = 0.25

@@ -195,21 +195,22 @@ class LondonZonesStrategy:
             notifier.send("ERROR DE ZONES", err, color="danger")
             return
 
-        # 5. Càlcul de preus de l'estratègia (TP Dinàmic segons cota NQ, SL Invariant 60 pts)
-        # Regla quantitativa validada: NQ < 21.000 pts -> TP 8 pts; NQ >= 21.000 pts -> TP 10 pts
-        dynamic_tp = 8.0 if self.london_high < 21000.0 else config.tp_points
-        dynamic_sl = config.sl_points
+        # 5. Càlcul de preus de l'estratègia (Brackets Asimètrics Optimitzats de Zones Pro)
+        # Zona Alta Londres: Sell Limit @ High + Offset (Sweet Spot Validat: TP 12.0 / SL 80.0)
+        short_offset = getattr(config, 'london_high_offset_points', 2.0)
+        short_entry = round(self.london_high + short_offset, 2)
+        short_tp_pts = getattr(config, 'london_high_tp_points', 12.0)
+        short_sl_pts = getattr(config, 'london_high_sl_points', 80.0)
+        short_tp = round(short_entry - short_tp_pts, 2)
+        short_sl = round(short_entry + short_sl_pts, 2)
 
-        # Zona Alta Londres: Sell Limit @ High
-        short_entry = self.london_high
-        short_tp = round(short_entry - dynamic_tp, 2)
-        short_sl = round(short_entry + dynamic_sl, 2)
-
-        # Zona Baixa Londres: Buy Limit @ Low (Model Millorat Sweep Offset 2.0 pts)
+        # Zona Baixa Londres: Buy Limit @ Low - Offset (Model Sweep Validat: TP 14.0 / SL 60.0)
         long_offset = getattr(config, 'london_low_offset_points', 2.0)
         long_entry = round(self.london_low - long_offset, 2)
-        long_tp = round(long_entry + dynamic_tp, 2)
-        long_sl = round(long_entry - dynamic_sl, 2)
+        long_tp_pts = getattr(config, 'london_low_tp_points', 14.0)
+        long_sl_pts = getattr(config, 'london_low_sl_points', 60.0)
+        long_tp = round(long_entry + long_tp_pts, 2)
+        long_sl = round(long_entry - long_sl_pts, 2)
 
         # 🛡️ SANITY GUARD DE PREU DE MERCAT (Evitar ompliment instantani a mercat)
         curr_price = tradovate_client.get_current_market_price(config.symbol_base)
@@ -260,8 +261,8 @@ class LondonZonesStrategy:
         else:
             mode_badge = f"💼 [COMPTE REAL: {contracts} MNQ]"
         
-        short_status_text = f"`{short_entry:.2f}`\n   • Take Profit: `{short_tp:.2f}` (+{dynamic_tp:.1f} pts)\n   • Stop Loss:   `{short_sl:.2f}` (-{dynamic_sl:.1f} pts)" if can_place_short else f"~~{short_entry:.2f}~~ *(Omesa: preu de mercat ja per sobre)*"
-        long_status_text = f"`{long_entry:.2f}`\n   • Take Profit: `{long_tp:.2f}` (+{dynamic_tp:.1f} pts)\n   • Stop Loss:   `{long_sl:.2f}` (-{dynamic_sl:.1f} pts)" if can_place_long else f"~~{long_entry:.2f}~~ *(Omesa: preu de mercat ja per sota)*"
+        short_status_text = f"`{short_entry:.2f}`\n   • Take Profit: `{short_tp:.2f}` (+{short_tp_pts:.1f} pts)\n   • Stop Loss:   `{short_sl:.2f}` (-{short_sl_pts:.1f} pts)" if can_place_short else f"~~{short_entry:.2f}~~ *(Omesa: preu de mercat ja per sobre)*"
+        long_status_text = f"`{long_entry:.2f}`\n   • Take Profit: `{long_tp:.2f}` (+{long_tp_pts:.1f} pts)\n   • Stop Loss:   `{long_sl:.2f}` (-{long_sl_pts:.1f} pts)" if can_place_long else f"~~{long_entry:.2f}~~ *(Omesa: preu de mercat ja per sota)*"
 
         notifier.send(
             f"{mode_badge} ZONES CALCULADES",
