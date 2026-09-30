@@ -195,7 +195,7 @@
             Zones de Londres: <span id="hero-title-accent" class="gradient-text-emerald">High & Low Institucional</span>
           </h2>
           <p id="hero-description" class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
-            L'auditoria tick a tick d'1 segon sobre <strong class="text-white">1 any complet de CME Globex (MNQ)</strong> demostra l'enorme eficàcia de la reversió a la mitjana sobre els extrems de la sessió de Londres (08:00 a 11:00 CEST). A les 11:00 CEST es pengen ordres límit passives (Sell Limit a l'High i Buy Limit al Low) amb el <strong class="text-emerald-400 font-bold">Sweet Spot (TP 10 / SL 60)</strong>, generant un rendiment sostingut sense risc de pernocta.
+            L'auditoria tick a tick d'1 segon sobre <strong class="text-white">1 any complet de CME Globex (MNQ)</strong> demostra l'enorme eficàcia de la reversió a la mitjana sobre els extrems de la sessió de Londres (08:00 a 11:00 CEST). A les 11:00 CEST es pengen ordres límit passives (Sell Limit a l'High i Buy Limit al Low) amb el <strong class="text-emerald-400 font-bold">Sweet Spot (High 12/80 · Low 14/60)</strong>, generant un rendiment sostingut sense risc de pernocta.
           </p>
           <div class="flex flex-wrap gap-4 pt-2">
             <a href="#drawdown-analisis" class="inline-flex items-center space-x-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-amber-500 hover:from-emerald-600 hover:to-amber-600 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-emerald-500/20">
@@ -327,22 +327,22 @@
           <div class="space-y-3">
             <div class="flex justify-between items-center">
               <span class="px-2.5 py-1 rounded text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">ZONA ALTA · SELL LIMIT</span>
-              <span class="text-xs font-mono text-emerald-400 font-bold">86.61% WR (97W / 15L)</span>
+              <span class="text-xs font-mono text-emerald-400 font-bold">93.75% WR (105W / 7L)</span>
             </div>
             <h4 class="text-xl font-bold text-white flex items-center space-x-2">
               <span>🔴 London High (Short Zone · Sweep +2 pts)</span>
             </h4>
             <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Quan el preu escombra el màxim institucional de la sessió de Londres (08:00 a 11:00 CEST), l'ordre Sell Limit entra passivament 2 punts per sobre de la zona, capturant el gir baixista cap al Take Profit de 14 punts amb protecció estricta de 60 punts.
+              Quan el preu escombra el màxim institucional de la sessió de Londres (08:00 a 11:00 CEST), l'ordre Sell Limit entra passivament 2 punts per sobre de la zona, capturant el gir baixista cap al Take Profit de 12 punts amb una protecció ampliada de 80 punts per absorbir l'overshoot de pre-market.
             </p>
           </div>
           <div class="pt-4 border-t border-slate-800 space-y-2 text-xs font-mono">
             <div class="flex justify-between"><span class="text-slate-400">Finestra Càlcul:</span><span class="text-white">08:00 - 11:00 CEST (02h-05h NY)</span></div>
             <div class="flex justify-between"><span class="text-slate-400">Direcció / Tipus:</span><span class="text-rose-400 font-bold">SELL LIMIT @ High + 2.0 pts</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">Sweet Spot Bracket:</span><span class="text-white">TP +14.0 pts / SL -60.0 pts</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Sweet Spot Bracket:</span><span class="text-white">TP +12.0 pts / SL -80.0 pts</span></div>
             <div class="flex justify-between"><span class="text-slate-400">Total Operacions:</span><span class="text-amber-400 font-bold">112 trades / any</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">PnL Punts Nets:</span><span class="text-emerald-400 font-bold">+458.0 punts CME</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">Mediana de MAE:</span><span class="text-slate-300">12.25 pts</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">PnL Punts Nets:</span><span class="text-emerald-400 font-bold">+700.0 punts CME</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Mediana de MAE:</span><span class="text-slate-300">10.75 pts</span></div>
           </div>
         </div>
 
@@ -398,10 +398,10 @@
         <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2.5">
           <div class="flex items-center space-x-2 text-cyan-400 font-bold">
             <i data-lucide="shield-alert" class="w-4 h-4"></i>
-            <span id="card-mae-max-title">Stop Loss Invariant a 60 Punts</span>
+            <span id="card-mae-max-title">Risc Asimètric (High 80 / Low 60)</span>
           </div>
           <p class="text-slate-300 leading-relaxed" id="card-mae-max-desc">
-            Donar 60 punts d'Stop Loss és el veritable secret de l'estratègia: permet absorbir l'overshoot típic del Nasdaq sense trencar la regla de protecció de capital.
+            Donar 80 punts d'SL a London High permet resistir les dilatacions alcistes agressives de pre-market abans del gir, mentre London Low manté 60 punts amb un impecable 91.26% de Win Rate.
           </p>
         </div>
 
